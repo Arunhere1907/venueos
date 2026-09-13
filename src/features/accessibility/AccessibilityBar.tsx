@@ -1,92 +1,75 @@
 /**
- * VenueOS — Accessibility Control & Preferences Bar
+ * VenueOS — Minimal Accessibility Toggle Bar
  */
 import React from 'react';
 import { useAttendeeStore } from '../../stores/attendeeStore';
 import { useToastStore } from '../../stores/toastStore';
-import { Accessibility, Volume2, Check } from 'lucide-react';
+import { Accessibility, Volume2 } from 'lucide-react';
 import { speakText } from '../../lib/speech';
 
 export const AccessibilityBar: React.FC = () => {
   const { profile, toggleAccessibilityMode } = useAttendeeStore();
   const { addToast } = useToastStore();
-  const isEnabled = profile.accessibilityMode;
+  const on = profile.accessibilityMode;
 
-  const handleTestTTS = () => {
+  const handleTest = () =>
     speakText('Universal accessibility mode active. Step-free routing, high-contrast visual cues, and assistive speech services are enabled.');
-  };
 
   const handleToggle = () => {
     toggleAccessibilityMode();
-    if (!isEnabled) {
-      addToast('Universal Accessibility Mode enabled (Step-Free routes & high-contrast)', 'success');
-    } else {
-      addToast('Universal Accessibility Mode disabled', 'info');
-    }
+    addToast(
+      on ? 'Accessibility mode disabled' : 'Accessibility mode enabled — step-free routes & high contrast',
+      on ? 'info' : 'success'
+    );
   };
 
   return (
     <div
-      className={`rounded-2xl p-3.5 transition-all flex flex-wrap items-center justify-between gap-3 ${
-        isEnabled
-          ? 'bg-slate-900 text-white border-2 border-emerald-400 shadow-md'
-          : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800'
+      className={`flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-xl border transition-colors ${
+        on
+          ? 'bg-[#0a0a0a] border-[#0a0a0a] text-white'
+          : 'bg-white border-[#e8e8e8] text-[#0a0a0a]'
       }`}
     >
-      <div className="flex items-center gap-3">
-        <div
-          className={`p-2 rounded-xl shrink-0 ${
-            isEnabled ? 'bg-emerald-500 text-slate-950' : 'bg-indigo-50 text-indigo-600'
-          }`}
-        >
-          <Accessibility className="w-5 h-5" />
-        </div>
+      {/* Label */}
+      <div className="flex items-center gap-2.5">
+        <Accessibility className={`w-4 h-4 shrink-0 ${on ? 'text-white' : 'text-[#4f46e5]'}`} />
         <div>
-          <div className="flex items-center gap-2">
-            <h4 className="text-sm font-bold">Universal Accessibility Mode</h4>
-            {isEnabled && (
-              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-emerald-500 text-slate-950">
-                ACTIVE
+          <p className="text-sm font-medium leading-none">
+            Universal Accessibility Mode
+            {on && (
+              <span className="ml-2 text-[10px] font-semibold tracking-widest uppercase text-[#4ade80]">
+                on
               </span>
             )}
-          </div>
-          <p className="text-xs opacity-80">
-            Step-free routing, elevated contrast typography, and assistive screen reader cues.
+          </p>
+          <p className={`text-[11px] mt-0.5 ${on ? 'text-[#c8c8c8]' : 'text-[#6b6b6b]'}`}>
+            Step-free routing · elevated contrast · screen reader cues
           </p>
         </div>
       </div>
 
+      {/* Controls */}
       <div className="flex items-center gap-2">
-        <button
-          onClick={handleTestTTS}
-          className={`px-3 py-1.5 text-xs font-semibold rounded-xl flex items-center gap-1.5 border transition-all ${
-            isEnabled
-              ? 'bg-slate-800 hover:bg-slate-700 text-white border-slate-700'
-              : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'
-          }`}
-          title="Test screen reader speech"
-        >
-          <Volume2 className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">Speech Guide</span>
-        </button>
-
+        {on && (
+          <button
+            onClick={handleTest}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-white/20 text-white hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          >
+            <Volume2 className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Test voice</span>
+          </button>
+        )}
         <button
           onClick={handleToggle}
-          aria-pressed={isEnabled}
-          className={`px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 ${
-            isEnabled
-              ? 'bg-emerald-400 hover:bg-emerald-300 text-slate-950 shadow-sm'
-              : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+          aria-pressed={on}
+          className={`px-4 py-1.5 text-xs font-semibold rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-[#4f46e5] ${
+            on
+              ? 'bg-white text-[#0a0a0a] hover:bg-[#f7f7f7]'
+              : 'bg-[#0a0a0a] text-white hover:bg-[#1a1a1a]'
           }`}
         >
-          {isEnabled ? (
-            <>
-              <Check className="w-4 h-4" />
-              <span>Enabled</span>
-            </>
-          ) : (
-            <span>Enable Mode</span>
-          )}
+          {on ? 'Disable' : 'Enable'}
         </button>
       </div>
     </div>

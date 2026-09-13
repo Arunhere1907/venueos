@@ -1,5 +1,5 @@
 /**
- * VenueOS — Emergency & SOS Rapid Dispatch Modal
+ * VenueOS — Minimal SOS Modal & Floating Button
  */
 import React, { useState } from 'react';
 import { useSOSStore } from '../../stores/sosStore';
@@ -10,244 +10,206 @@ import { findNearestVenue } from '../../lib/routing';
 import { sanitizeInput } from '../../lib/utils';
 import { Modal } from '../../components/Modal';
 import { Button } from '../../components/Button';
-import {
-  AlertOctagon,
-  HeartPulse,
-  Shield,
-  HelpCircle,
-  MapPin,
-  Phone,
-  CheckCircle2,
-  Clock,
-  Send
-} from 'lucide-react';
+import { AlertOctagon, HeartPulse, Shield, HelpCircle, MapPin, Send } from 'lucide-react';
 
+/* ─── Type selector card ─────────────────── */
+const SOS_TYPES: { id: SOSType; label: string; icon: React.FC<{ className?: string }>; color: string; activeClasses: string }[] = [
+  {
+    id: 'medical',
+    label: 'Medical',
+    icon: HeartPulse,
+    color: 'text-[#dc2626]',
+    activeClasses: 'border-[#dc2626] bg-[#fff5f5] text-[#dc2626]',
+  },
+  {
+    id: 'security',
+    label: 'Security',
+    icon: Shield,
+    color: 'text-[#4f46e5]',
+    activeClasses: 'border-[#4f46e5] bg-[#f0f0ff] text-[#4f46e5]',
+  },
+  {
+    id: 'general',
+    label: 'Help',
+    icon: HelpCircle,
+    color: 'text-[#b45309]',
+    activeClasses: 'border-[#b45309] bg-[#fffbeb] text-[#b45309]',
+  },
+];
+
+/* ─── Modal ──────────────────────────────── */
 export const SOSModal: React.FC = () => {
   const { isSosModalOpen, setSosModalOpen, createSOS, requests } = useSOSStore();
   const { userLocation, venues } = useNavigationStore();
   const { addToast } = useToastStore();
 
   const [selectedType, setSelectedType] = useState<SOSType>('medical');
-  const [notes, setNotes] = useState<string>('');
+  const [notes, setNotes] = useState('');
   const [activeCreatedId, setActiveCreatedId] = useState<string | null>(null);
 
-  // Find nearest first aid and security stations
   const nearestFirstAid = findNearestVenue(userLocation, venues, ['firstaid']);
   const nearestSecurity = findNearestVenue(userLocation, venues, ['security', 'helpdesk']);
-
-  // Check if there is an active pending request from this session
-  const activeRequest = requests.find(r => r.id === activeCreatedId);
+  const activeRequest   = requests.find(r => r.id === activeCreatedId);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const sanitizedNotes = sanitizeInput(notes, 300);
-
-    // Determine closest venue for reference
-    const nearestAny = findNearestVenue(userLocation, venues, [
-      'stage',
-      'booth',
-      'foodcourt',
-      'helpdesk',
-      'firstaid'
-    ]);
-
-    const newId = createSOS({
+    const sanitized = sanitizeInput(notes, 300);
+    const nearest = findNearestVenue(userLocation, venues, ['stage', 'booth', 'foodcourt', 'helpdesk', 'firstaid']);
+    const id = createSOS({
       type: selectedType,
       location: userLocation,
-      venueId: nearestAny?.venue.id,
-      venueName: nearestAny?.venue.name,
-      notes: sanitizedNotes || undefined,
-      reporterName: 'Attendee (Direct Mobile Dispatch)'
+      venueId: nearest?.venue.id,
+      venueName: nearest?.venue.name,
+      notes: sanitized || undefined,
+      reporterName: 'Attendee (Direct Mobile Dispatch)',
     });
-
-    setActiveCreatedId(newId);
-    addToast('🚨 High Priority Emergency SOS Broadcasted! Staff Dispatched.', 'warning', 5000);
+    setActiveCreatedId(id);
+    addToast('Emergency SOS dispatched. Staff alerted.', 'warning', 5000);
   };
 
   const handleClose = () => {
     setSosModalOpen(false);
-    // Reset form after delay
-    setTimeout(() => {
-      setActiveCreatedId(null);
-      setNotes('');
-    }, 400);
+    setTimeout(() => { setActiveCreatedId(null); setNotes(''); }, 400);
   };
 
   return (
     <Modal
       isOpen={isSosModalOpen}
       onClose={handleClose}
-      title={activeRequest ? 'Emergency Request Active' : 'Raise Immediate Emergency SOS'}
+      title={activeRequest ? 'Emergency Request Active' : 'Raise Emergency SOS'}
       maxWidth="md"
     >
       {activeRequest ? (
-        // Confirmation & Live Dispatch Tracking View
-        <div className="space-y-4 py-2 text-center">
-          <div className="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto animate-pulse">
-            <AlertOctagon className="w-8 h-8" />
+        /* ── Confirmation view ──────────────────── */
+        <div className="space-y-4 text-center">
+          <div className="w-12 h-12 rounded-full border-2 border-[#dc2626] flex items-center justify-center mx-auto">
+            <AlertOctagon className="w-6 h-6 text-[#dc2626]" />
           </div>
 
           <div>
-            <span className="text-xs uppercase tracking-wider font-bold text-rose-600">
-              Live Priority Dispatch Ticket
-            </span>
-            <h3 className="text-xl font-extrabold text-slate-900 mt-1">
-              {activeRequest.status === 'acknowledged'
-                ? 'Responder En Route'
-                : 'Help Request Transmitted'}
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-[#dc2626]">
+              Live dispatch ticket
+            </p>
+            <h3 className="text-base font-semibold text-[#0a0a0a] mt-1">
+              {activeRequest.status === 'acknowledged' ? 'Responder en route' : 'Help request transmitted'}
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
-              Ticket ID: {activeRequest.id} • Assigned to Event Operations Desk
+            <p className="text-xs text-[#6b6b6b] mt-0.5">
+              Ticket {activeRequest.id}
             </p>
           </div>
 
-          {/* Status Indicator Card */}
-          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left space-y-2">
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-500 font-medium">Status:</span>
-              <span
-                className={`font-bold px-2.5 py-0.5 rounded-full ${
-                  activeRequest.status === 'acknowledged'
-                    ? 'bg-emerald-100 text-emerald-800'
-                    : 'bg-amber-100 text-amber-800'
-                }`}
-              >
-                {activeRequest.status.toUpperCase()}
+          {/* Status table */}
+          <div className="rounded-xl border border-[#e8e8e8] divide-y divide-[#f0f0f0] text-left text-xs">
+            <div className="flex items-center justify-between px-4 py-2.5">
+              <span className="text-[#6b6b6b]">Status</span>
+              <span className={`font-semibold ${activeRequest.status === 'acknowledged' ? 'text-[#16a34a]' : 'text-[#b45309]'}`}>
+                {activeRequest.status.charAt(0).toUpperCase() + activeRequest.status.slice(1)}
               </span>
             </div>
-
             {activeRequest.assignedStaffName && (
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-500 font-medium">Assigned Staff:</span>
-                <span className="font-bold text-slate-800">{activeRequest.assignedStaffName}</span>
+              <div className="flex items-center justify-between px-4 py-2.5">
+                <span className="text-[#6b6b6b]">Assigned staff</span>
+                <span className="font-medium text-[#0a0a0a]">{activeRequest.assignedStaffName}</span>
               </div>
             )}
-
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-500 font-medium">Reported Location:</span>
-              <span className="font-semibold text-slate-800">{activeRequest.venueName || 'Main Concourse'}</span>
+            <div className="flex items-center justify-between px-4 py-2.5">
+              <span className="text-[#6b6b6b]">Location</span>
+              <span className="font-medium text-[#0a0a0a]">{activeRequest.venueName || 'Main Concourse'}</span>
             </div>
           </div>
 
           {/* Instructions */}
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-left text-xs text-rose-800 leading-relaxed">
-            <strong>Stay in your current position if safe.</strong> Medical and safety staff have your coordinates. If immediate life-threatening danger exists, also call venue emergency dispatch at{' '}
-            <a href="tel:+15550192831" className="font-bold underline">
-              +1 (555) 019-2831
-            </a>.
-          </div>
+          <p className="text-xs text-[#3a3a3a] bg-[#f7f7f7] rounded-xl px-4 py-3 text-left leading-relaxed">
+            <strong>Stay in your current position if safe.</strong> Staff have your coordinates.
+            If in immediate danger, call{' '}
+            <a href="tel:+15550192831" className="font-semibold text-[#4f46e5] underline">+1 (555) 019-2831</a>.
+          </p>
 
-          <Button variant="secondary" onClick={handleClose} fullWidth>
-            Dismiss Dialog (Ticket Remains Active)
+          <Button variant="outline" onClick={handleClose} fullWidth>
+            Dismiss (ticket stays active)
           </Button>
         </div>
       ) : (
-        // New SOS Submission Form
+        /* ── Request form ───────────────────────── */
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-900 leading-relaxed">
-            Emergency requests are broadcast in high-priority real-time to the Event Operations Center.
-          </div>
+          {/* Alert */}
+          <p className="text-xs text-[#3a3a3a] bg-[#f7f7f7] rounded-xl px-4 py-3 leading-relaxed">
+            Emergency requests are broadcast in real-time to the Event Operations Center.
+          </p>
 
-          {/* Emergency Type Selector */}
+          {/* Type picker */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-              Select Emergency Type
-            </label>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-[#6b6b6b] mb-2">
+              Emergency type
+            </p>
             <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => setSelectedType('medical')}
-                className={`p-3 rounded-xl border flex flex-col items-center gap-1.5 transition-all text-xs font-bold ${
-                  selectedType === 'medical'
-                    ? 'bg-rose-50 border-rose-500 text-rose-700 ring-2 ring-rose-500/20 shadow-xs'
-                    : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
-                }`}
-              >
-                <HeartPulse className="w-5 h-5 text-rose-500" />
-                <span>Medical</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setSelectedType('security')}
-                className={`p-3 rounded-xl border flex flex-col items-center gap-1.5 transition-all text-xs font-bold ${
-                  selectedType === 'security'
-                    ? 'bg-indigo-50 border-indigo-500 text-indigo-700 ring-2 ring-indigo-500/20 shadow-xs'
-                    : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
-                }`}
-              >
-                <Shield className="w-5 h-5 text-indigo-600" />
-                <span>Security</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setSelectedType('general')}
-                className={`p-3 rounded-xl border flex flex-col items-center gap-1.5 transition-all text-xs font-bold ${
-                  selectedType === 'general'
-                    ? 'bg-amber-50 border-amber-500 text-amber-800 ring-2 ring-amber-500/20 shadow-xs'
-                    : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
-                }`}
-              >
-                <HelpCircle className="w-5 h-5 text-amber-500" />
-                <span>Urgent Help</span>
-              </button>
+              {SOS_TYPES.map(({ id, label, icon: Icon, color, activeClasses }) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => setSelectedType(id)}
+                  className={`flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4f46e5] ${
+                    selectedType === id
+                      ? activeClasses
+                      : 'border-[#e8e8e8] text-[#6b6b6b] hover:border-[#d4d4d4] hover:bg-[#f7f7f7]'
+                  }`}
+                >
+                  <Icon className={`w-5 h-5 ${selectedType === id ? '' : color}`} />
+                  {label}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Nearest Facility Quick References */}
-          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5 text-xs text-slate-600">
-            <div className="font-semibold text-slate-800 flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-indigo-500" />
-              Nearest Fixed Safety Points:
+          {/* Nearest facilities */}
+          {(nearestFirstAid || nearestSecurity) && (
+            <div className="rounded-xl border border-[#e8e8e8] divide-y divide-[#f0f0f0] text-xs">
+              <div className="px-4 py-2 flex items-center gap-1.5 text-[#6b6b6b] font-medium">
+                <MapPin className="w-3.5 h-3.5 text-[#4f46e5]" />
+                Nearest safety points
+              </div>
+              {nearestFirstAid && (
+                <div className="px-4 py-2 flex justify-between">
+                  <span className="text-[#3a3a3a]">{nearestFirstAid.venue.name}</span>
+                  <span className="text-[#6b6b6b]">~{nearestFirstAid.distanceMeters}m</span>
+                </div>
+              )}
+              {nearestSecurity && (
+                <div className="px-4 py-2 flex justify-between">
+                  <span className="text-[#3a3a3a]">{nearestSecurity.venue.name}</span>
+                  <span className="text-[#6b6b6b]">~{nearestSecurity.distanceMeters}m</span>
+                </div>
+              )}
             </div>
-            {nearestFirstAid && (
-              <div className="flex items-center justify-between">
-                <span>{nearestFirstAid.venue.name}</span>
-                <span className="font-medium text-slate-800">~{nearestFirstAid.distanceMeters}m away</span>
-              </div>
-            )}
-            {nearestSecurity && (
-              <div className="flex items-center justify-between">
-                <span>{nearestSecurity.venue.name}</span>
-                <span className="font-medium text-slate-800">~{nearestSecurity.distanceMeters}m away</span>
-              </div>
-            )}
-          </div>
+          )}
 
-          {/* Optional Details Input */}
+          {/* Notes */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Brief details (Optional):
+            <label className="block text-[11px] font-semibold text-[#6b6b6b] uppercase tracking-wider mb-1.5">
+              Details (optional)
             </label>
             <textarea
               value={notes}
-              onChange={(e) => setNotes(e.target.value)}
+              onChange={e => setNotes(e.target.value)}
               placeholder="e.g. Person unresponsive near table 4, or lost child with red backpack"
               rows={2}
               maxLength={300}
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500"
+              className="w-full px-3 py-2.5 bg-[#f7f7f7] border border-[#e8e8e8] rounded-xl text-xs text-[#0a0a0a] placeholder:text-[#9a9a9a] resize-none focus:outline-none focus:ring-2 focus:ring-[#4f46e5]"
             />
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2 pt-2">
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={handleClose}
-              className="flex-1"
-            >
+          {/* Actions */}
+          <div className="flex gap-2 pt-1">
+            <Button type="button" variant="ghost" onClick={handleClose} className="flex-1">
               Cancel
             </Button>
             <Button
               type="submit"
               variant="danger"
-              leftIcon={<Send className="w-4 h-4" />}
+              leftIcon={<Send className="w-3.5 h-3.5" />}
               className="flex-[2]"
             >
-              Broadcast SOS Now
+              Broadcast SOS
             </Button>
           </div>
         </form>
@@ -256,6 +218,7 @@ export const SOSModal: React.FC = () => {
   );
 };
 
+/* ─── Floating SOS button ────────────────── */
 export const SOSButton: React.FC = () => {
   const { setSosModalOpen, requests } = useSOSStore();
   const hasPending = requests.some(r => r.status === 'pending');
@@ -263,15 +226,15 @@ export const SOSButton: React.FC = () => {
   return (
     <button
       onClick={() => setSosModalOpen(true)}
-      aria-label="Raise emergency SOS request"
-      className={`fixed bottom-6 right-6 z-40 p-4 rounded-2xl shadow-2xl flex items-center gap-2.5 font-bold text-white transition-all transform hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-rose-400 select-none ${
+      aria-label="Raise emergency SOS"
+      className={`fixed bottom-6 right-6 z-40 flex items-center gap-2 px-4 py-3 rounded-xl font-semibold text-sm text-white transition-all focus:outline-none focus-visible:ring-4 focus-visible:ring-[#dc2626]/40 select-none ${
         hasPending
-          ? 'bg-rose-600 animate-bounce ring-4 ring-rose-400/50'
-          : 'bg-rose-600 hover:bg-rose-700 shadow-rose-900/30'
+          ? 'bg-[#dc2626] ring-4 ring-[#dc2626]/30 animate-pulse'
+          : 'bg-[#dc2626] hover:bg-[#b91c1c]'
       }`}
     >
-      <AlertOctagon className="w-6 h-6 animate-pulse" />
-      <span className="text-sm tracking-wide uppercase font-extrabold pr-1">SOS</span>
+      <AlertOctagon className="w-4 h-4" />
+      <span className="tracking-wide">SOS</span>
     </button>
   );
 };

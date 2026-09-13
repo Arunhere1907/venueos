@@ -1,21 +1,59 @@
 @import "tailwindcss";
 
-/* VenueOS — Tailwind v4 Theme Configuration */
+/* ─────────────────────────────────────────────
+   VenueOS — Minimal Design System
+   Philosophy: white space dominant, near-black
+   type, a single ink accent, hairline borders
+───────────────────────────────────────────── */
 @theme {
-  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* Typography */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
+
+  /* Minimal palette — ink on paper */
+  --color-ink:       #0a0a0a;
+  --color-ink-2:     #3a3a3a;
+  --color-ink-3:     #6b6b6b;
+  --color-ink-4:     #9a9a9a;
+  --color-ink-5:     #c8c8c8;
+  --color-paper:     #ffffff;
+  --color-paper-2:   #f7f7f7;
+  --color-paper-3:   #f0f0f0;
+  --color-border:    #e8e8e8;
+  --color-border-2:  #d4d4d4;
+
+  /* Single accent — electric indigo, used sparingly */
+  --color-accent:    #4f46e5;
+  --color-accent-2:  #6366f1;
+  --color-accent-bg: #f0f0ff;
+
+  /* Status — desaturated, quiet */
+  --color-ok:        #16a34a;
+  --color-ok-bg:     #f0faf4;
+  --color-warn:      #b45309;
+  --color-warn-bg:   #fffbeb;
+  --color-danger:    #dc2626;
+  --color-danger-bg: #fff5f5;
+  --color-info:      #0369a1;
+  --color-info-bg:   #f0f9ff;
 }
 
-/* Global Overflow Safety */
+/* ─── Base resets ─────────────────────────── */
 html {
   overflow-x: hidden;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  /* Google Inter via standard API */
+  font-feature-settings: 'cv11', 'ss01';
 }
 
 body {
   overflow-x: hidden;
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--color-paper);
+  color: var(--color-ink);
 }
 
 #root {
@@ -24,86 +62,69 @@ body {
   min-height: 100vh;
 }
 
-/* Animation Keyframes */
+/* ─── Inter via Google Fonts ──────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ─── Keyframes ───────────────────────────── */
 @keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 @keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1);    }
 }
 
-/* Custom utility classes */
-.animate-slideUp {
-  animation: slideUp 0.25s ease-out both;
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0);    }
 }
 
-.animate-fadeIn {
-  animation: fadeIn 0.2s ease-out both;
-}
+.animate-slideUp   { animation: slideUp   0.2s ease-out both; }
+.animate-fadeIn    { animation: fadeIn    0.15s ease-out both; }
+.animate-scaleIn   { animation: scaleIn   0.18s ease-out both; }
+.animate-slideDown { animation: slideDown 0.18s ease-out both; }
 
-.animate-scaleIn {
-  animation: scaleIn 0.2s ease-out both;
-}
-
-/* Scrollbar-none utility for horizontal filter chip scrolling */
+/* ─── Scrollbar suppression ───────────────── */
 .scrollbar-none {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+.scrollbar-none::-webkit-scrollbar { display: none; }
 
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
-}
+.overflow-y-auto { -webkit-overflow-scrolling: touch; }
 
-/* iOS Safari scroll container fix */
-.overflow-y-auto {
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Screen reader only utility (for skip-to-content links) */
+/* ─── Accessibility helpers ───────────────── */
 .sr-only {
   position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  clip: rect(0,0,0,0);
   white-space: nowrap;
   border-width: 0;
 }
-
 .focus\:not-sr-only:focus {
   position: static;
-  width: auto;
-  height: auto;
-  padding: inherit;
-  margin: inherit;
-  overflow: visible;
-  clip: auto;
+  width: auto; height: auto;
+  padding: inherit; margin: inherit;
+  overflow: visible; clip: auto;
   white-space: normal;
+}
+
+/* ─── Minimal input base ──────────────────── */
+input, textarea, select {
+  font-family: var(--font-sans);
+}
+
+/* ─── Thin dividers ───────────────────────── */
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
 }
