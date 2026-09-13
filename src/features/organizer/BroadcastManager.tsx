@@ -1,0 +1,154 @@
+/**
+ * VenueOS — Organizer Broadcast Center
+ */
+import React, { useState } from 'react';
+import { useAnnouncementStore } from '../../stores/announcementsStore';
+import { useCrowdStore } from '../../stores/crowdStore';
+import { useToastStore } from '../../stores/toastStore';
+import { AnnouncementSeverity } from '../../types';
+import { Button } from '../../components/Button';
+import {
+  Radio,
+  Send,
+  AlertTriangle,
+  Info,
+  BellRing
+} from 'lucide-react';
+
+export const BroadcastManager: React.FC = () => {
+  const { broadcastAnnouncement } = useAnnouncementStore();
+  const { zones } = useCrowdStore();
+  const { addToast } = useToastStore();
+
+  const [title, setTitle] = useState<string>('');
+  const [body, setBody] = useState<string>('');
+  const [severity, setSeverity] = useState<AnnouncementSeverity>('info');
+  const [targetZoneId, setTargetZoneId] = useState<string>('all');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim() || !body.trim()) {
+      addToast('Please provide both a title and message for the broadcast.', 'error');
+      return;
+    }
+
+    broadcastAnnouncement({
+      title: title.trim(),
+      body: body.trim(),
+      severity,
+      targetZoneId: targetZoneId === 'all' ? undefined : targetZoneId
+    });
+
+    addToast(`Broadcast sent: "${title.trim()}"`, 'success');
+    setTitle('');
+    setBody('');
+    setSeverity('info');
+  };
+
+  return (
+    <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs space-y-5">
+      <div>
+        <div className="flex items-center gap-2">
+          <Radio className="w-5 h-5 text-indigo-600" />
+          <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">
+            Push Event Announcement
+          </h3>
+        </div>
+        <p className="text-xs sm:text-sm text-slate-500 mt-1">
+          Broadcast operational bulletins, schedule shifts, emergency warnings, or crowd advisories in real time to all attendee mobile devices.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Severity Selector */}
+        <div>
+          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            Announcement Priority Level
+          </label>
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { level: 'info', label: 'Info / General', color: 'border-sky-500 bg-sky-50 text-sky-700', icon: Info },
+              { level: 'warning', label: 'Warning / Advisory', color: 'border-amber-500 bg-amber-50 text-amber-800', icon: AlertTriangle },
+              { level: 'urgent', label: 'Urgent / Banner', color: 'border-rose-500 bg-rose-50 text-rose-700', icon: BellRing }
+            ].map(({ level, label, color, icon: Icon }) => (
+              <button
+                key={level}
+                type="button"
+                onClick={() => setSeverity(level as AnnouncementSeverity)}
+                className={`p-3 rounded-xl border text-left flex items-center gap-2 transition-all text-xs font-semibold ${
+                  severity === level
+                    ? `${color} ring-2 ring-indigo-500/20 shadow-xs`
+                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                <Icon className="w-4 h-4 shrink-0" />
+                <span>{label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Target Zone */}
+        <div>
+          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            Geographic Scope
+          </label>
+          <select
+            value={targetZoneId}
+            onChange={(e) => setTargetZoneId(e.target.value)}
+            className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="all">Broadcast Entire Venue (All Attendees)</option>
+            {zones.map(z => (
+              <option key={z.id} value={z.id}>
+                Target: {z.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Title */}
+        <div>
+          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            Headline / Subject
+          </label>
+          <input
+            type="text"
+            required
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="e.g. Keynote Q&A Starting in Main Amphitheater"
+            className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        {/* Message Body */}
+        <div>
+          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+            Full Announcement Body
+          </label>
+          <textarea
+            required
+            rows={3}
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            placeholder="Provide clear, concise instructions. Text will also be read aloud to vision-impaired attendees using text-to-speech."
+            className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        {/* Submit */}
+        <div className="flex justify-end pt-2">
+          <Button
+            type="submit"
+            variant="primary"
+            leftIcon={<Send className="w-4 h-4" />}
+            disabled={!title.trim() || !body.trim()}
+          >
+            Transmit Live Broadcast
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+};
