@@ -3,7 +3,7 @@
  * Accessible venue wayfinding, session discovery, real-time crowd coordination,
  * emergency SOS response, and organizer operations.
  */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { useAuthStore } from './stores/authStore';
 import { useNavigationStore } from './stores/navigationStore';
 import { useSOSStore } from './stores/sosStore';
@@ -21,7 +21,7 @@ import { ToastBanner } from './components/ToastBanner';
 import { ToastNotification } from './components/ToastNotification';
 import { NotFoundPage } from './features/NotFoundPage';
 
-// Feature Modules - Attendee
+// Feature Modules - Attendee (eagerly loaded for main experience)
 import { VenueMap } from './features/navigation/VenueMap';
 import { MapSearch } from './features/navigation/MapSearch';
 import { RouteGuideCard } from './features/navigation/RouteGuideCard';
@@ -37,8 +37,12 @@ import { SOSModal, SOSButton } from './features/sos/SOSModal';
 import { IssueReportModal } from './features/issues/IssueReportModal';
 import { BuddyFinderModal } from './features/buddy/BuddyFinderModal';
 
-// Feature Modules - Organizer
-import { OrganizerDashboard } from './features/organizer/OrganizerDashboard';
+// Feature Modules - Organizer (lazy loaded to reduce initial bundle)
+const OrganizerDashboard = lazy(() => 
+  import('./features/organizer/OrganizerDashboard').then(module => ({
+    default: module.OrganizerDashboard
+  }))
+);
 
 // Icons
 import {
@@ -244,7 +248,7 @@ export default function App() {
       </header>
 
       {/* Main App Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 flex-1 w-full">
+      <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 flex-1 w-full">
         {is404 ? (
           <NotFoundPage
             onGoHome={() => goHome()}
@@ -302,7 +306,18 @@ export default function App() {
             )}
 
             {/* Organizer Command Center */}
-            {role === 'organizer' && <OrganizerDashboard />}
+            {role === 'organizer' && (
+              <Suspense fallback={
+                <div className="flex items-center justify-center py-20">
+                  <div className="text-center space-y-3">
+                    <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto" />
+                    <p className="text-sm text-slate-500">Loading Organizer Dashboard...</p>
+                  </div>
+                </div>
+              }>
+                <OrganizerDashboard />
+              </Suspense>
+            )}
           </>
         )}
       </main>

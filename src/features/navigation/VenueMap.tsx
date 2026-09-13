@@ -2,7 +2,7 @@
  * VenueOS — Interactive SVG Venue Map & Wayfinding Engine
  * Features realistic architectural zones, pins, step-free routes, and live crowd status.
  */
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { useNavigationStore } from '../../stores/navigationStore';
 import { useCrowdStore } from '../../stores/crowdStore';
 import { useAttendeeStore } from '../../stores/attendeeStore';
