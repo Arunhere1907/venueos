@@ -101,9 +101,14 @@ class MockRealtimeService {
     ];
 
     const idx = Math.floor(Math.random() * titles.length);
+    const title = titles[idx];
+    const body = bodies[idx];
+    
+    if (!title || !body) return;
+    
     useAnnouncementStore.getState().broadcastAnnouncement({
-      title: titles[idx],
-      body: bodies[idx],
+      title,
+      body,
       severity: 'info'
     });
   }

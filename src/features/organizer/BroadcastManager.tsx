@@ -6,6 +6,7 @@ import { useAnnouncementStore } from '../../stores/announcementsStore';
 import { useCrowdStore } from '../../stores/crowdStore';
 import { useToastStore } from '../../stores/toastStore';
 import { AnnouncementSeverity } from '../../types';
+import { sanitizeInput } from '../../lib/utils';
 import { Button } from '../../components/Button';
 import {
   Radio,
@@ -27,19 +28,23 @@ export const BroadcastManager: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim() || !body.trim()) {
+    
+    const sanitizedTitle = sanitizeInput(title, 200);
+    const sanitizedBody = sanitizeInput(body, 1000);
+    
+    if (!sanitizedTitle.trim() || !sanitizedBody.trim()) {
       addToast('Please provide both a title and message for the broadcast.', 'error');
       return;
     }
 
     broadcastAnnouncement({
-      title: title.trim(),
-      body: body.trim(),
+      title: sanitizedTitle,
+      body: sanitizedBody,
       severity,
       targetZoneId: targetZoneId === 'all' ? undefined : targetZoneId
     });
 
-    addToast(`Broadcast sent: "${title.trim()}"`, 'success');
+    addToast(`Broadcast sent: "${sanitizedTitle}"`, 'success');
     setTitle('');
     setBody('');
     setSeverity('info');
@@ -118,6 +123,7 @@ export const BroadcastManager: React.FC = () => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. Keynote Q&A Starting in Main Amphitheater"
+            maxLength={200}
             className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
@@ -133,6 +139,7 @@ export const BroadcastManager: React.FC = () => {
             value={body}
             onChange={(e) => setBody(e.target.value)}
             placeholder="Provide clear, concise instructions. Text will also be read aloud to vision-impaired attendees using text-to-speech."
+            maxLength={1000}
             className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>

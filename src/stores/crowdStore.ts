@@ -34,10 +34,14 @@ export const useCrowdStore = create<CrowdState>((set, get) => ({
         const last = newHistory[newHistory.length - 1];
         const prev = newHistory[newHistory.length - 2];
 
-        const levelScore = (l: CrowdLevel) => (l === 'high' ? 3 : l === 'medium' ? 2 : 1);
-        if (levelScore(last) > levelScore(prev)) {
+        const levelScore = (l: CrowdLevel | undefined) => {
+          if (!l) return 1;
+          return l === 'high' ? 3 : l === 'medium' ? 2 : 1;
+        };
+        
+        if (last && prev && levelScore(last) > levelScore(prev)) {
           trend = 'rising';
-        } else if (levelScore(last) < levelScore(prev)) {
+        } else if (last && prev && levelScore(last) < levelScore(prev)) {
           trend = 'falling';
         }
 
@@ -68,6 +72,7 @@ export const useCrowdStore = create<CrowdState>((set, get) => ({
     // Randomly fluctuate one zone slightly
     const targetIdx = Math.floor(Math.random() * zones.length);
     const target = zones[targetIdx];
+    if (!target) return;
     
     // Probabilistic transition
     const levels: CrowdLevel[] = ['low', 'medium', 'high'];
@@ -77,6 +82,8 @@ export const useCrowdStore = create<CrowdState>((set, get) => ({
     const delta = Math.random() > 0.5 ? 1 : -1;
     const newIdx = Math.max(0, Math.min(2, currentIdx + delta));
     const newLevel = levels[newIdx];
+    if (!newLevel) return;
+    
     const countChange = delta * Math.floor(Math.random() * 40 + 15);
 
     get().updateZoneCrowd(target.id, newLevel, countChange);

@@ -85,16 +85,19 @@ export function findNearestVenue(
   types: string[]
 ): { venue: Venue; distanceMeters: number } | null {
   const filtered = venues.filter(v => types.includes(v.type));
-  if (!filtered.length) return null;
+  if (!filtered.length || !filtered[0]) return null;
 
   let closestVenue: Venue = filtered[0];
   let minDistance = calculateDistanceMeters(currentPos, { x: closestVenue.x, y: closestVenue.y });
 
   for (let i = 1; i < filtered.length; i++) {
-    const dist = calculateDistanceMeters(currentPos, { x: filtered[i].x, y: filtered[i].y });
+    const venue = filtered[i];
+    if (!venue) continue;
+    
+    const dist = calculateDistanceMeters(currentPos, { x: venue.x, y: venue.y });
     if (dist < minDistance) {
       minDistance = dist;
-      closestVenue = filtered[i];
+      closestVenue = venue;
     }
   }
 

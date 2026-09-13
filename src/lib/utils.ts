@@ -157,3 +157,50 @@ export function fuzzyMatch(pattern: string, text: string): boolean {
   const tokens = p.split(/\s+/);
   return tokens.every(tok => t.includes(tok));
 }
+
+/**
+ * Sanitizes user input to prevent XSS and injection attacks.
+ * Removes HTML tags and script content, trims whitespace.
+ * @param input - Raw user input string
+ * @param maxLength - Maximum allowed length (default 1000)
+ * @returns Sanitized string safe for display
+ */
+export function sanitizeInput(input: string, maxLength: number = 1000): string {
+  if (typeof input !== 'string') return '';
+  
+  // Remove HTML tags and script content
+  const stripped = input
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/<[^>]+>/g, '')
+    .trim();
+  
+  // Limit length
+  return stripped.slice(0, maxLength);
+}
+
+/**
+ * Validates and sanitizes URL input to prevent open redirects.
+ * Only allows relative paths and same-origin URLs.
+ * @param url - URL string to validate
+ * @returns Sanitized URL or null if invalid
+ */
+export function sanitizeUrl(url: string): string | null {
+  if (typeof url !== 'string' || !url.trim()) return null;
+  
+  // Allow relative paths starting with / or #
+  if (url.startsWith('/') || url.startsWith('#')) {
+    return url;
+  }
+  
+  // For absolute URLs, validate against current origin
+  try {
+    const parsed = new URL(url, window.location.origin);
+    if (parsed.origin === window.location.origin) {
+      return parsed.href;
+    }
+  } catch {
+    return null;
+  }
+  
+  return null;
+}

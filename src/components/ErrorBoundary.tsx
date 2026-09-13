@@ -2,7 +2,7 @@
  * VenueOS — React Error Boundary
  * Catches rendering errors and shows a recovery UI instead of a blank screen.
  */
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertOctagon, RefreshCw, Compass } from 'lucide-react';
 
 interface Props {
@@ -24,7 +24,7 @@ export class ErrorBoundary extends Component<Props, State> {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('[VenueOS Error Boundary]', error, errorInfo);
   }
 
@@ -32,7 +32,7 @@ export class ErrorBoundary extends Component<Props, State> {
     this.setState({ hasError: false, error: null });
   };
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       return (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">

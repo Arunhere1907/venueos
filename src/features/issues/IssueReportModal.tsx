@@ -8,7 +8,7 @@ import { useToastStore } from '../../stores/toastStore';
 import { IssueType } from '../../types';
 import { Modal } from '../../components/Modal';
 import { Button } from '../../components/Button';
-import { getIssueTypeInfo } from '../../lib/utils';
+import { getIssueTypeInfo, sanitizeInput } from '../../lib/utils';
 import {
   AlertCircle,
   Droplets,
@@ -34,7 +34,9 @@ export const IssueReportModal: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!description.trim()) {
+    const sanitizedDescription = sanitizeInput(description, 500);
+    
+    if (!sanitizedDescription.trim()) {
       addToast('Please describe the issue before submitting.', 'error');
       return;
     }
@@ -46,7 +48,7 @@ export const IssueReportModal: React.FC = () => {
       location: targetVenue ? { x: targetVenue.x, y: targetVenue.y } : userLocation,
       venueId: targetVenue?.id,
       venueName: targetVenue?.name,
-      description: description.trim(),
+      description: sanitizedDescription,
       reporterName: 'Attendee (Mobile App)'
     });
 
@@ -143,6 +145,7 @@ export const IssueReportModal: React.FC = () => {
             <textarea
               required
               rows={3}
+              maxLength={500}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g. Large coffee puddle near table 12, slip hazard for wheelchairs."

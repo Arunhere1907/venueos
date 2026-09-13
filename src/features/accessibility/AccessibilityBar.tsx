@@ -4,7 +4,7 @@
 import React from 'react';
 import { useAttendeeStore } from '../../stores/attendeeStore';
 import { useToastStore } from '../../stores/toastStore';
-import { Accessibility, Eye, Volume2, Sparkles, Check } from 'lucide-react';
+import { Accessibility, Volume2, Check } from 'lucide-react';
 import { speakText } from '../../lib/speech';
 
 export const AccessibilityBar: React.FC = () => {

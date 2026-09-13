@@ -1,6 +1,5 @@
 {
   "name": "VenueOS",
   "description": "Smart Event Experience platform for accessible venue wayfinding, session discovery, real-time crowd coordination, emergency SOS response, and organizer operations.",
-  "requestFramePermissions": ["microphone"],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "requestFramePermissions": ["microphone"]
 }

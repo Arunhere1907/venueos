@@ -3,7 +3,7 @@
  * Accessible venue wayfinding, session discovery, real-time crowd coordination,
  * emergency SOS response, and organizer operations.
  */
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuthStore } from './stores/authStore';
 import { useNavigationStore } from './stores/navigationStore';
 import { useSOSStore } from './stores/sosStore';
@@ -57,7 +57,7 @@ export default function App() {
   const { role, setRole } = useAuthStore();
   const { profile } = useAttendeeStore();
   const { requests } = useSOSStore();
-  const { activeRoute, selectedVenueId } = useNavigationStore();
+  const { activeRoute } = useNavigationStore();
 
   const [attendeeTab, setAttendeeTab] = useState<AttendeeTab>('map');
   const [buddyModalOpen, setBuddyModalOpen] = useState<boolean>(false);

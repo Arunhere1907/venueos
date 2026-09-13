@@ -7,6 +7,7 @@ import { useNavigationStore } from '../../stores/navigationStore';
 import { useToastStore } from '../../stores/toastStore';
 import { SOSType } from '../../types';
 import { findNearestVenue } from '../../lib/routing';
+import { sanitizeInput } from '../../lib/utils';
 import { Modal } from '../../components/Modal';
 import { Button } from '../../components/Button';
 import {
@@ -40,6 +41,8 @@ export const SOSModal: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const sanitizedNotes = sanitizeInput(notes, 300);
+
     // Determine closest venue for reference
     const nearestAny = findNearestVenue(userLocation, venues, [
       'stage',
@@ -54,7 +57,7 @@ export const SOSModal: React.FC = () => {
       location: userLocation,
       venueId: nearestAny?.venue.id,
       venueName: nearestAny?.venue.name,
-      notes: notes.trim() || undefined,
+      notes: sanitizedNotes || undefined,
       reporterName: 'Attendee (Direct Mobile Dispatch)'
     });
 
@@ -223,6 +226,7 @@ export const SOSModal: React.FC = () => {
               onChange={(e) => setNotes(e.target.value)}
               placeholder="e.g. Person unresponsive near table 4, or lost child with red backpack"
               rows={2}
+              maxLength={300}
               className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500"
             />
           </div>

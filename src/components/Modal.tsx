@@ -64,7 +64,7 @@ export const Modal: React.FC<ModalProps> = ({
       <div
         className={`relative w-full ${maxWidthClass} bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transform transition-all z-10 my-auto animate-scaleIn`}
       >
-        {(title || onClose) && (
+        {(title || typeof onClose !== 'undefined') && (
           <div className="flex items-start justify-between px-6 pt-5 pb-4 border-b border-slate-100 dark:border-slate-800">
             <div>
               {title && (

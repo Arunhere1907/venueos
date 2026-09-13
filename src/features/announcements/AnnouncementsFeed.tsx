@@ -13,7 +13,6 @@ import {
   AlertTriangle,
   Info,
   Radio,
-  Sparkles,
   Filter
 } from 'lucide-react';
 import { Button } from '../../components/Button';

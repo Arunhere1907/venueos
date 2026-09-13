@@ -7,6 +7,7 @@ import { useScheduleStore } from '../../stores/scheduleStore';
 import { useCrowdStore } from '../../stores/crowdStore';
 import { ChatMessage } from '../../types';
 import { Button } from '../../components/Button';
+import { sanitizeInput } from '../../lib/utils';
 import {
   MessageSquare,
   X,
@@ -56,7 +57,11 @@ export const AIConciergeChat: React.FC<AIConciergeChatProps> = ({ onNavigateToVe
   ];
 
   const handleSendMessage = (textToSend?: string) => {
-    const query = (textToSend || inputValue).trim();
+    const rawQuery = (textToSend || inputValue).trim();
+    if (!rawQuery) return;
+
+    // Sanitize user input to prevent XSS and injection attacks
+    const query = sanitizeInput(rawQuery, 500);
     if (!query) return;
 
     const userMsg: ChatMessage = {
@@ -246,6 +251,7 @@ export const AIConciergeChat: React.FC<AIConciergeChatProps> = ({ onNavigateToVe
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Ask anything about the venue..."
+              maxLength={500}
               className="flex-1 px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             <button
