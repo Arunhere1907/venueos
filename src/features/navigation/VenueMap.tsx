@@ -79,80 +79,80 @@ export const VenueMap: React.FC = () => {
   return (
     <div className="relative w-full h-[400px] sm:h-[520px] lg:h-[620px] bg-slate-900 rounded-3xl overflow-hidden border border-slate-800 shadow-xl select-none">
       {/* Top Map Control Bar */}
-      <div className="absolute top-3 left-3 z-20 flex flex-wrap items-center gap-2">
+      <div className="absolute top-4 left-4 z-20 flex flex-wrap items-center gap-2">
         <button
           onClick={() => setIsRelocatingUser(!isRelocatingUser)}
-          className={`px-3 py-2 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-all shadow-sm ${
+          className={`px-3 py-1.5 text-xs font-semibold rounded-xl flex items-center gap-1.5 transition-all shadow-md ${
             isRelocatingUser
-              ? 'bg-amber-500 text-white ring-2 ring-amber-400/50 animate-pulse'
-              : 'bg-slate-800/95 hover:bg-slate-700 text-slate-100 border border-slate-700'
+              ? 'bg-amber-500 text-slate-950 ring-2 ring-amber-300 animate-pulse'
+              : 'bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700'
           }`}
           title="Click anywhere on the map to place your starting pin"
         >
-          <Navigation className="w-4 h-4" />
+          <Navigation className="w-3.5 h-3.5" />
           {isRelocatingUser ? 'Click Map to Place Pin' : 'Relocate Start Pin'}
         </button>
 
         {/* Accessibility Status indicator */}
         {accessibleOnly && (
-          <span className="px-3 py-2 text-xs font-semibold rounded-lg bg-emerald-500/20 text-emerald-200 border border-emerald-500/30 flex items-center gap-1.5 shadow-sm backdrop-blur-sm">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="px-2.5 py-1 text-[11px] font-medium rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
             Step-Free Routing Active
           </span>
         )}
 
         {/* Connected Buddy Indicator */}
         {profile.connectedBuddy && (
-          <span className="px-3 py-2 text-xs font-semibold rounded-lg bg-indigo-500/20 text-indigo-200 border border-indigo-500/30 flex items-center gap-1.5 shadow-sm backdrop-blur-sm">
-            <UserCheck className="w-4 h-4" />
+          <span className="px-2.5 py-1 text-[11px] font-medium rounded-xl bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 flex items-center gap-1.5">
+            <UserCheck className="w-3.5 h-3.5" />
             Buddy on Map: {profile.connectedBuddy.name}
           </span>
         )}
       </div>
 
       {/* Zoom / Navigation Controls */}
-      <div className="absolute top-3 right-3 z-20 flex flex-col gap-1 bg-slate-800/95 backdrop-blur-sm p-1 rounded-lg border border-slate-700 shadow-sm">
+      <div className="absolute top-4 right-4 z-20 flex flex-col gap-1.5 bg-slate-800/90 backdrop-blur-xs p-1.5 rounded-2xl border border-slate-700 shadow-md">
         <button
           onClick={() => handleZoom(0.2)}
           aria-label="Zoom in"
-          className="p-2 text-slate-200 hover:text-white hover:bg-slate-700 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+          className="p-2 text-slate-200 hover:text-white hover:bg-slate-700 rounded-xl transition-colors"
         >
           <ZoomIn className="w-4 h-4" />
         </button>
         <button
           onClick={() => handleZoom(-0.2)}
           aria-label="Zoom out"
-          className="p-2 text-slate-200 hover:text-white hover:bg-slate-700 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+          className="p-2 text-slate-200 hover:text-white hover:bg-slate-700 rounded-xl transition-colors"
         >
           <ZoomOut className="w-4 h-4" />
         </button>
         <button
           onClick={handleResetZoom}
           aria-label="Reset map perspective"
-          className="p-2 text-slate-200 hover:text-white hover:bg-slate-700 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+          className="p-2 text-slate-200 hover:text-white hover:bg-slate-700 rounded-xl transition-colors"
         >
           <Maximize2 className="w-4 h-4" />
         </button>
       </div>
 
       {/* Map Legend Overlay */}
-      <div className="absolute bottom-3 left-3 z-20 hidden sm:flex items-center gap-3 bg-slate-900/95 backdrop-blur-md px-4 py-2.5 rounded-lg border border-slate-800 text-xs text-slate-300 shadow-sm">
+      <div className="absolute bottom-4 left-4 z-20 hidden sm:flex items-center gap-3 bg-slate-900/90 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-slate-800 text-xs text-slate-300 shadow-lg">
         <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-emerald-500" />
-          <span className="font-medium">Low Density</span>
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+          <span>Low Density</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-amber-500" />
-          <span className="font-medium">Medium Density</span>
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+          <span>Medium Density</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-full bg-rose-500" />
-          <span className="font-medium">High Density</span>
+          <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+          <span>High Density</span>
         </div>
-        <div className="h-4 w-px bg-slate-700 mx-1" />
+        <div className="h-3 w-px bg-slate-700 mx-1" />
         <div className="flex items-center gap-1.5">
-          <span className="w-4 h-0.5 bg-indigo-400" />
-          <span className="font-medium">Concourse Route</span>
+          <span className="w-3 h-0.5 bg-indigo-400" />
+          <span>Concourse Route</span>
         </div>
       </div>
 
@@ -507,27 +507,27 @@ export const VenueMap: React.FC = () => {
 
       {/* Floating Selected Venue Mini-Card */}
       {selectedVenue && (
-        <div className="absolute bottom-3 right-3 z-20 max-w-[calc(100%-1.5rem)] sm:max-w-sm bg-slate-900/95 backdrop-blur-md p-4 rounded-lg border border-slate-700 shadow-lg text-white">
-          <div className="flex items-start justify-between gap-3">
+        <div className="absolute bottom-4 right-4 z-20 max-w-[calc(100%-2rem)] sm:max-w-sm bg-slate-900/95 backdrop-blur-md p-4 rounded-2xl border border-slate-700 shadow-2xl text-white">
+          <div className="flex items-start justify-between gap-2">
             <div>
-              <span className="text-xs uppercase font-bold tracking-wider text-indigo-400 block mb-1">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-indigo-400">
                 {selectedVenue.type}
               </span>
-              <h4 className="text-base font-bold text-white leading-snug">
+              <h4 className="text-sm font-bold text-white leading-tight">
                 {selectedVenue.name}
               </h4>
-              <p className="text-sm text-slate-300 mt-1.5 line-clamp-2 leading-relaxed">
+              <p className="text-xs text-slate-300 mt-1 line-clamp-2">
                 {selectedVenue.description}
               </p>
             </div>
           </div>
 
-          <div className="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between text-sm text-slate-400">
-            <span className="font-medium">Floor {selectedVenue.floor || 1}</span>
+          <div className="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+            <span>Floor {selectedVenue.floor || 1}</span>
             {selectedVenue.isAccessible && (
-              <span className="text-emerald-400 font-semibold">Step-free access</span>
+              <span className="text-emerald-400 font-medium">Step-free access</span>
             )}
-            <span className="font-medium">{selectedVenue.checkInCount || 0} check-ins</span>
+            <span>{selectedVenue.checkInCount || 0} check-ins</span>
           </div>
         </div>
       )}

@@ -121,19 +121,18 @@ export const MapSearch: React.FC = () => {
             }}
             onFocus={() => setIsDropdownOpen(true)}
             placeholder="Search stages, booths, restrooms, food, or help desks..."
-            className="w-full pl-12 pr-24 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-sm font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm transition-shadow"
+            className="w-full pl-12 pr-24 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-xs"
           />
 
-          <div className="absolute right-2 flex items-center gap-1.5">
+          <div className="absolute right-2 flex items-center gap-1">
             {searchQuery && (
               <button
                 onClick={() => {
                   setSearchQuery('');
                   setIsDropdownOpen(false);
                 }}
-                className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg"
                 title="Clear search"
-                aria-label="Clear search"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -142,13 +141,12 @@ export const MapSearch: React.FC = () => {
             {/* Voice Search Button */}
             <button
               onClick={handleVoiceSearch}
-              className={`p-2 rounded-md transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+              className={`p-2 rounded-xl transition-all ${
                 isListening
-                  ? 'bg-rose-500 text-white animate-pulse shadow-sm'
-                  : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
+                  ? 'bg-rose-500 text-white animate-pulse'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
               }`}
               title="Voice Search: Click and speak a place name or category"
-              aria-label={isListening ? 'Stop voice search' : 'Start voice search'}
             >
               {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
             </button>
@@ -157,14 +155,14 @@ export const MapSearch: React.FC = () => {
 
         {/* Voice Feedback Notification */}
         {voiceFeedback && (
-          <div className="mt-2 px-3 py-2 bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-100 dark:border-indigo-900 rounded-lg text-xs text-indigo-700 dark:text-indigo-300 animate-fadeIn leading-relaxed">
+          <div className="mt-1.5 px-3 py-1.5 bg-indigo-50 border border-indigo-100 rounded-xl text-xs text-indigo-700 animate-fadeIn">
             {voiceFeedback}
           </div>
         )}
 
         {/* Autocomplete Dropdown */}
         {isDropdownOpen && suggestions.length > 0 && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 rounded-lg shadow-lg border border-slate-200 dark:border-slate-800 z-30 overflow-hidden py-1">
+          <div className="absolute top-full left-0 right-0 mt-1.5 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 z-30 overflow-hidden py-1">
             {suggestions.map((item) => (
               <button
                 key={item.id}
@@ -173,21 +171,21 @@ export const MapSearch: React.FC = () => {
                   setSearchQuery(item.name);
                   setIsDropdownOpen(false);
                 }}
-                className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors focus-visible:outline-none focus-visible:bg-slate-50 dark:focus-visible:bg-slate-800"
+                className="w-full px-4 py-2.5 flex items-center justify-between text-left hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
                   <MapPin className="w-4 h-4 text-indigo-500 shrink-0" />
                   <div>
                     <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">
                       {item.name}
                     </div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    <div className="text-xs text-slate-500">
                       {item.type} • Floor {item.floor || 1}
                     </div>
                   </div>
                 </div>
                 {item.isAccessible && (
-                  <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-1 rounded-md">
+                  <span className="text-[11px] font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
                     Step-free
                   </span>
                 )}
@@ -200,17 +198,17 @@ export const MapSearch: React.FC = () => {
       {/* Filter Chips & Accessible Route Toggle */}
       <div className="w-full min-w-0 flex items-center justify-between gap-3 overflow-x-auto pb-1 scrollbar-none">
         {/* Category Chips */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1.5 shrink-0">
           {CATEGORIES.map((cat) => {
             const isSelected = typeFilter === cat.value;
             return (
               <button
                 key={cat.value}
                 onClick={() => setTypeFilter(cat.value)}
-                className={`px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                   isSelected
-                    ? 'bg-indigo-600 text-white shadow-sm'
-                    : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
+                    ? 'bg-indigo-600 text-white shadow-xs'
+                    : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:bg-slate-50'
                 }`}
               >
                 {cat.label}
@@ -222,13 +220,12 @@ export const MapSearch: React.FC = () => {
         {/* Accessible Routes Toggle */}
         <button
           onClick={() => setAccessibleOnly(!accessibleOnly)}
-          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all border shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border shrink-0 ${
             accessibleOnly
-              ? 'bg-emerald-500 text-white border-emerald-600 shadow-sm'
-              : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
+              ? 'bg-emerald-500 text-white border-emerald-600 shadow-xs'
+              : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-50'
           }`}
           title="Filter and route step-free accessible pathways only"
-          aria-label={`Toggle accessible routes filter ${accessibleOnly ? 'off' : 'on'}`}
         >
           <Accessibility className="w-4 h-4" />
           <span>Step-Free Only</span>

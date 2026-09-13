@@ -37,7 +37,7 @@ export const AnnouncementsFeed: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header & Broadcast status */}
-      <div className="bg-white dark:bg-slate-900 rounded-lg p-5 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
@@ -45,10 +45,10 @@ export const AnnouncementsFeed: React.FC = () => {
               Live Event Broadcast
             </span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white mt-1">
             Official Announcements & Updates
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-xl">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-xl">
             Real-time notifications from Event Security, Speaker Coordinators, and Venue Facilities.
           </p>
         </div>
@@ -74,10 +74,10 @@ export const AnnouncementsFeed: React.FC = () => {
           <button
             key={sev}
             onClick={() => setFilterSeverity(sev)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all flex-shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+            className={`px-3 py-1 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all ${
               filterSeverity === sev
                 ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-                : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+                : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800'
             }`}
           >
             {sev}
@@ -88,10 +88,10 @@ export const AnnouncementsFeed: React.FC = () => {
       {/* Announcements List */}
       <div className="space-y-3">
         {filtered.length === 0 ? (
-          <div className="bg-white dark:bg-slate-900 rounded-lg p-10 text-center border border-slate-200 dark:border-slate-800 shadow-sm space-y-2">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-10 text-center border border-slate-200 dark:border-slate-800 space-y-2">
             <Bell className="w-8 h-8 text-slate-400 mx-auto" />
-            <h4 className="text-base font-semibold text-slate-800 dark:text-slate-200">No announcements in this category</h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400">All is quiet right now across the venue channels.</p>
+            <h4 className="text-base font-bold text-slate-800">No announcements in this category</h4>
+            <p className="text-xs text-slate-500">All is quiet right now across the venue channels.</p>
           </div>
         ) : (
           filtered.map((ann) => {
@@ -101,7 +101,7 @@ export const AnnouncementsFeed: React.FC = () => {
             return (
               <article
                 key={ann.id}
-                className="bg-white dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800 shadow-sm hover:border-indigo-300 dark:hover:border-indigo-700 transition-all space-y-3"
+                className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs hover:border-indigo-300 transition-all space-y-3"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3">

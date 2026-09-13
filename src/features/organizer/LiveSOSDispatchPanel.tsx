@@ -44,7 +44,7 @@ export const LiveSOSDispatchPanel: React.FC = () => {
   return (
     <div className="space-y-5">
       {/* Header and Controls */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-5 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping" />
@@ -52,10 +52,10 @@ export const LiveSOSDispatchPanel: React.FC = () => {
               Emergency Command Center
             </span>
           </div>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mt-1">
+          <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mt-1">
             Live SOS Triage & Tactical Staff Dispatch
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             Monitor incoming SOS requests from attendees and deploy the closest certified medical or security personnel.
           </p>
         </div>
@@ -66,7 +66,7 @@ export const LiveSOSDispatchPanel: React.FC = () => {
           size="sm"
           onClick={() => mockRealtimeService.triggerSimulatedSOS()}
           leftIcon={<Zap className="w-4 h-4" />}
-          className="shrink-0"
+          className="shrink-0 shadow-md"
           title="Simulate an emergency alert to demonstrate the full responder workflow"
         >
           Simulate Test SOS
@@ -74,15 +74,15 @@ export const LiveSOSDispatchPanel: React.FC = () => {
       </div>
 
       {/* Staff Roster Snapshot */}
-      <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
-        <span className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider block mb-3">
+      <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
+        <span className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block mb-2">
           On-Duty Staff Roster ({availableStaff.length} Available / {staff.length} Total)
         </span>
         <div className="flex flex-wrap gap-2">
           {staff.map(member => (
             <div
               key={member.id}
-              className={`text-xs px-3 py-1.5 rounded-lg border flex items-center gap-2 ${
+              className={`text-xs px-3 py-1.5 rounded-xl border flex items-center gap-2 ${
                 member.status === 'available'
                   ? 'bg-white dark:bg-slate-900 border-emerald-300 text-slate-800 dark:text-slate-200'
                   : 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 text-amber-800 dark:text-amber-300'
@@ -110,12 +110,12 @@ export const LiveSOSDispatchPanel: React.FC = () => {
         </h4>
 
         {pendingRequests.length === 0 ? (
-          <div className="p-6 text-center bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm space-y-2">
+          <div className="p-8 text-center bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
             <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
-            <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+            <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">
               No Active Emergencies
             </h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-slate-500">
               All venue sectors are green and clear. Emergency response teams standing by.
             </p>
           </div>
@@ -127,16 +127,16 @@ export const LiveSOSDispatchPanel: React.FC = () => {
             return (
               <div
                 key={req.id}
-                className={`p-5 rounded-lg border transition-all ${
+                className={`p-5 rounded-2xl border transition-all ${
                   isPending
-                    ? 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-300 dark:border-rose-900 shadow-sm ring-1 ring-rose-400/20'
-                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-sm'
+                    ? 'bg-rose-50/60 dark:bg-rose-950/30 border-rose-300 dark:border-rose-900 shadow-md ring-1 ring-rose-400/20'
+                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-xs'
                 } space-y-3`}
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <span
-                      className={`p-2.5 rounded-lg text-white font-semibold ${
+                      className={`p-3 rounded-xl text-white ${
                         req.type === 'medical'
                           ? 'bg-rose-600'
                           : req.type === 'security'
@@ -173,7 +173,7 @@ export const LiveSOSDispatchPanel: React.FC = () => {
                         </span>
                       </div>
 
-                      <h4 className="text-base font-semibold text-slate-900 dark:text-white mt-0.5">
+                      <h4 className="text-base font-bold text-slate-900 dark:text-white mt-0.5">
                         {req.venueName || 'Concourse Corridor'}
                       </h4>
                     </div>
@@ -202,7 +202,7 @@ export const LiveSOSDispatchPanel: React.FC = () => {
 
                 {/* Reporter notes */}
                 {req.notes && (
-                  <div className="p-3 bg-white dark:bg-slate-800/80 rounded-lg border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300">
+                  <div className="p-3 bg-white dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300">
                     <span className="font-semibold text-slate-900 dark:text-white block mb-0.5">
                       Reporter Notes ({req.reporterName}):
                     </span>
@@ -211,18 +211,18 @@ export const LiveSOSDispatchPanel: React.FC = () => {
                 )}
 
                 {/* Staff Dispatch Section */}
-                <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                   {req.assignedStaffName ? (
                     <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-semibold">
                       <UserCheck className="w-4 h-4" />
                       <span>Dispatched: {req.assignedStaffName} (En Route)</span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-3 flex-1">
+                    <div className="flex items-center gap-2 flex-1">
                       <select
                         value={selectedStaffBySOS[req.id] || availableStaff[0]?.id || ''}
                         onChange={(e) => handleStaffSelect(req.id, e.target.value)}
-                        className="px-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-xs font-medium text-slate-900 dark:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-0"
+                        className="px-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-medium focus:ring-2 focus:ring-indigo-500"
                       >
                         {availableStaff.map(s => (
                           <option key={s.id} value={s.id}>
@@ -243,9 +243,9 @@ export const LiveSOSDispatchPanel: React.FC = () => {
                     </div>
                   )}
 
-                  <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500">
+                  <div className="flex items-center gap-2 text-slate-400">
                     <MapPin className="w-3.5 h-3.5" />
-                    <span>Coords: ({req.location.x}, {req.location.y})</span>
+                    <span>Coordinates: ({req.location.x}, {req.location.y})</span>
                   </div>
                 </div>
               </div>
@@ -256,24 +256,24 @@ export const LiveSOSDispatchPanel: React.FC = () => {
 
       {/* Resolved Request Archive */}
       {resolvedRequests.length > 0 && (
-        <div className="pt-3 border-t border-slate-200 dark:border-slate-800">
-          <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-3">
+        <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
+          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">
             Resolved Incident Log ({resolvedRequests.length})
           </span>
           <div className="space-y-2">
             {resolvedRequests.map(req => (
               <div
                 key={req.id}
-                className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm text-xs flex items-center justify-between opacity-70"
+                className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 text-xs flex items-center justify-between opacity-70"
               >
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                   <span className="font-semibold text-slate-800 dark:text-slate-200">
                     {req.type.toUpperCase()} • {req.venueName || 'Concourse'}
                   </span>
-                  <span className="text-slate-400 dark:text-slate-500">({formatTime(req.timestamp)})</span>
+                  <span className="text-slate-400">({formatTime(req.timestamp)})</span>
                 </div>
-                <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                <span className="text-[11px] text-slate-500">
                   Resolved by {req.assignedStaffName || 'Command Center'}
                 </span>
               </div>

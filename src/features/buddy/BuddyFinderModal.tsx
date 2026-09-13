@@ -68,12 +68,12 @@ export const BuddyFinderModal: React.FC<BuddyFinderModalProps> = ({ isOpen, onCl
     >
       <div className="space-y-5">
         {/* Your Unique Sharing Code */}
-        <div className="p-4 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 rounded-lg space-y-2">
+        <div className="p-4 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 rounded-2xl space-y-2">
           <span className="text-xs font-semibold text-indigo-700 dark:text-indigo-300 uppercase tracking-wider block">
             Your Personal Invite Code
           </span>
-          <div className="flex items-center justify-between gap-3 bg-white dark:bg-slate-900 p-2.5 rounded-lg border border-indigo-100 dark:border-indigo-900">
-            <span className="font-mono text-lg font-bold text-indigo-600 dark:text-indigo-400">
+          <div className="flex items-center justify-between gap-3 bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-indigo-100 dark:border-indigo-900">
+            <span className="font-mono text-lg font-extrabold text-indigo-600 dark:text-indigo-400">
               {myCode}
             </span>
             <Button
@@ -92,7 +92,7 @@ export const BuddyFinderModal: React.FC<BuddyFinderModalProps> = ({ isOpen, onCl
 
         {/* Currently Connected Buddy Status */}
         {profile.connectedBuddy ? (
-          <div className="p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg space-y-3">
+          <div className="p-4 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-2xl space-y-3">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2.5">
                 <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
@@ -111,7 +111,7 @@ export const BuddyFinderModal: React.FC<BuddyFinderModalProps> = ({ isOpen, onCl
 
               <button
                 onClick={handleDisconnect}
-                className="p-1.5 text-rose-600 hover:bg-rose-100 dark:hover:bg-rose-950/40 rounded-lg text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+                className="p-1.5 text-rose-600 hover:bg-rose-100 rounded-lg text-xs font-bold"
                 title="Disconnect buddy"
               >
                 <UserX className="w-4 h-4" />
@@ -125,7 +125,7 @@ export const BuddyFinderModal: React.FC<BuddyFinderModalProps> = ({ isOpen, onCl
         ) : (
           /* Pair with Buddy Input */
           <form onSubmit={handleConnect} className="space-y-2">
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
               Pair with Friend's Code
             </label>
             <div className="flex gap-2">
@@ -137,7 +137,7 @@ export const BuddyFinderModal: React.FC<BuddyFinderModalProps> = ({ isOpen, onCl
                   setErrorMsg('');
                 }}
                 placeholder="e.g. VOS-3199"
-                className="flex-1 px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm uppercase font-mono tracking-wider text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs uppercase font-mono tracking-wider focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               <Button
                 type="submit"
@@ -153,7 +153,7 @@ export const BuddyFinderModal: React.FC<BuddyFinderModalProps> = ({ isOpen, onCl
         )}
 
         {/* Privacy Note */}
-        <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400 flex items-start gap-2">
+        <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-500 flex items-start gap-2">
           <ShieldCheck className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
           <span>
             Location sharing is peer-to-peer scoped strictly between you and your buddy. No public broadcasting. You can stop sharing at any time.

@@ -29,15 +29,15 @@ export const IssueReportsQueue: React.FC = () => {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-5 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800">
         <div>
           <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
             Facilities & Amenities Dispatch
           </span>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white mt-1">
+          <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mt-1">
             Attendee Issue Tickets Queue
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             Triage attendee-submitted reports for liquid spills, queue congestions, broken doors, and sanitation needs.
           </p>
         </div>
@@ -55,7 +55,7 @@ export const IssueReportsQueue: React.FC = () => {
       </div>
 
       {/* Filter Chips */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="flex items-center gap-2">
         <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
           <Filter className="w-3.5 h-3.5" /> Status:
         </span>
@@ -63,10 +63,10 @@ export const IssueReportsQueue: React.FC = () => {
           <button
             key={status}
             onClick={() => setFilterStatus(status)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+            className={`px-3 py-1 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
               filterStatus === status
                 ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-                : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+                : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800'
             }`}
           >
             {status.replace('_', ' ')}
@@ -77,10 +77,10 @@ export const IssueReportsQueue: React.FC = () => {
       {/* Tickets List */}
       <div className="space-y-3">
         {filtered.length === 0 ? (
-          <div className="p-6 text-center bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm space-y-2">
+          <div className="p-8 text-center bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
             <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
-            <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">No Tickets Found</h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Facilities queue is completely caught up!</p>
+            <h4 className="text-sm font-bold text-slate-800">No Tickets Found</h4>
+            <p className="text-xs text-slate-500">Facilities queue is completely caught up!</p>
           </div>
         ) : (
           filtered.map(issue => {
@@ -89,32 +89,32 @@ export const IssueReportsQueue: React.FC = () => {
             return (
               <div
                 key={issue.id}
-                className="bg-white dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all"
+                className="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-3 hover:border-indigo-300 transition-all"
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <div className="flex items-center gap-2 flex-wrap">
+                    <div className="flex items-center gap-2">
                       <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${typeInfo.badge}`}>
                         {typeInfo.label}
                       </span>
                       <span className="text-xs text-slate-400">•</span>
-                      <span className="text-xs text-slate-500 dark:text-slate-400">
+                      <span className="text-xs text-slate-500">
                         {formatTime(issue.timestamp)}
                       </span>
                       <span
                         className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                           issue.status === 'open'
-                            ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300'
+                            ? 'bg-amber-100 text-amber-800'
                             : issue.status === 'in_progress'
-                            ? 'bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-300'
-                            : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300'
+                            ? 'bg-sky-100 text-sky-800'
+                            : 'bg-emerald-100 text-emerald-800'
                         }`}
                       >
                         {issue.status.toUpperCase().replace('_', ' ')}
                       </span>
                     </div>
 
-                    <h4 className="text-base font-semibold text-slate-900 dark:text-white mt-1 flex items-center gap-1.5">
+                    <h4 className="text-base font-bold text-slate-900 dark:text-white mt-1 flex items-center gap-1.5">
                       <MapPin className="w-4 h-4 text-indigo-500 shrink-0" />
                       <span>{issue.venueName || 'Concourse Walkway'}</span>
                     </h4>
@@ -151,7 +151,7 @@ export const IssueReportsQueue: React.FC = () => {
                   {issue.description}
                 </p>
 
-                <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 dark:text-slate-500 flex items-center justify-between">
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
                   <span>Reported by: {issue.reporterName || 'Attendee'}</span>
                   <span>Ticket ID: {issue.id}</span>
                 </div>
