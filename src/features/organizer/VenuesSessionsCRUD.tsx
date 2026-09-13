@@ -238,120 +238,93 @@ export const VenuesSessionsCRUD: React.FC = () => {
     setSessionModalOpen(false);
   };
 
+  /* shared form input style */
+  const inp = 'w-full px-3 py-2 bg-[#f7f7f7] border border-[#e8e8e8] rounded-lg text-xs text-[#0a0a0a] focus:outline-none focus:ring-2 focus:ring-[#4f46e5]';
+  const lbl = 'block text-[11px] font-semibold uppercase tracking-wider text-[#6b6b6b] mb-1';
+
   return (
     <div className="space-y-5">
-      {/* Top Selector and Add Button */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800">
+
+      {/* Header + tab switcher */}
+      <div className="bg-white rounded-xl border border-[#e8e8e8] p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">
-            Venues & Event Programming Directory
-          </h3>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Configure map coordinates, accessibility specifications, speaker details, and room capacities.
+          <h3 className="text-base font-semibold text-[#0a0a0a]">Venues &amp; Event Programming</h3>
+          <p className="text-xs text-[#6b6b6b] mt-0.5">
+            Configure map coordinates, accessibility, speaker details, and room capacities.
           </p>
         </div>
-
         <div className="flex items-center gap-2">
-          {/* Tab Switcher */}
-          <div className="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center gap-1">
-            <button
-              onClick={() => setActiveTab('venues')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                activeTab === 'venues'
-                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400'
-              }`}
-            >
-              Venues ({venues.length})
-            </button>
-            <button
-              onClick={() => setActiveTab('sessions')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                activeTab === 'sessions'
-                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400'
-              }`}
-            >
-              Sessions ({sessions.length})
-            </button>
+          <div className="flex items-center border border-[#e8e8e8] rounded-lg overflow-hidden text-xs font-medium">
+            {(['venues', 'sessions'] as const).map(t => (
+              <button
+                key={t}
+                onClick={() => setActiveTab(t)}
+                className={`px-3 py-1.5 transition-colors focus:outline-none ${
+                  activeTab === t
+                    ? 'bg-[#0a0a0a] text-white'
+                    : 'bg-white text-[#6b6b6b] hover:bg-[#f7f7f7]'
+                }`}
+              >
+                {t === 'venues' ? `Venues (${venues.length})` : `Sessions (${sessions.length})`}
+              </button>
+            ))}
           </div>
-
           <Button
             variant="primary"
             size="sm"
             onClick={activeTab === 'venues' ? handleOpenAddVenue : handleOpenAddSession}
-            leftIcon={<Plus className="w-4 h-4" />}
+            leftIcon={<Plus className="w-3.5 h-3.5" />}
           >
-            {activeTab === 'venues' ? 'Add Venue' : 'Add Session'}
+            Add {activeTab === 'venues' ? 'Venue' : 'Session'}
           </Button>
         </div>
       </div>
 
-      {/* Venues Table / List */}
+      {/* Venues table */}
       {activeTab === 'venues' && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs">
+        <div className="bg-white rounded-xl border border-[#e8e8e8] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 border-b border-slate-200 dark:border-slate-800 uppercase tracking-wider font-bold">
+              <thead className="bg-[#f7f7f7] border-b border-[#e8e8e8]">
                 <tr>
-                  <th className="py-3.5 px-4">Venue Name</th>
-                  <th className="py-3.5 px-4">Type</th>
-                  <th className="py-3.5 px-4">Zone</th>
-                  <th className="py-3.5 px-4">Coords (X, Y)</th>
-                  <th className="py-3.5 px-4">Accessibility</th>
-                  <th className="py-3.5 px-4">Check-ins</th>
-                  <th className="py-3.5 px-4 text-right">Actions</th>
+                  {['Venue', 'Type', 'Zone', 'Coords', 'Access', 'Check-ins', ''].map(h => (
+                    <th key={h} className={`py-3 px-4 text-[11px] font-semibold uppercase tracking-wider text-[#6b6b6b] ${h === '' ? 'text-right' : ''}`}>
+                      {h}
+                    </th>
+                  ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
+              <tbody className="divide-y divide-[#f0f0f0]">
                 {venues.map(v => {
                   const typeInfo = getVenueTypeInfo(v.type);
                   const zone = zones.find(z => z.id === v.zoneId);
-
                   return (
-                    <tr key={v.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
-                      <td className="py-3.5 px-4">
-                        <span className="font-bold text-slate-900 dark:text-white block">{v.name}</span>
-                        <span className="text-[11px] text-slate-400 line-clamp-1">{v.description}</span>
+                    <tr key={v.id} className="hover:bg-[#f7f7f7] transition-colors">
+                      <td className="py-3 px-4">
+                        <p className="font-medium text-[#0a0a0a]">{v.name}</p>
+                        <p className="text-[11px] text-[#9a9a9a] line-clamp-1">{v.description}</p>
                       </td>
-                      <td className="py-3.5 px-4">
-                        <span className={`px-2 py-0.5 rounded-full text-[11px] font-bold ${typeInfo.badgeBg}`}>
+                      <td className="py-3 px-4">
+                        <span className={`px-2 py-0.5 rounded-md text-[11px] font-medium border ${typeInfo.badgeBg}`}>
                           {v.type}
                         </span>
                       </td>
-                      <td className="py-3.5 px-4 text-slate-600 dark:text-slate-300">
-                        {zone?.name || v.zoneId}
+                      <td className="py-3 px-4 text-[#3a3a3a]">{zone?.name || v.zoneId}</td>
+                      <td className="py-3 px-4 font-mono text-[#9a9a9a]">({v.x},{v.y})</td>
+                      <td className="py-3 px-4">
+                        {v.isAccessible
+                          ? <span className="flex items-center gap-1 text-[#16a34a] font-medium"><Accessibility className="w-3.5 h-3.5" />Step-Free</span>
+                          : <span className="text-[#9a9a9a]">Standard</span>
+                        }
                       </td>
-                      <td className="py-3.5 px-4 font-mono text-slate-500">
-                        ({v.x}, {v.y})
-                      </td>
-                      <td className="py-3.5 px-4">
-                        {v.isAccessible ? (
-                          <span className="text-emerald-600 font-bold flex items-center gap-1">
-                            <Accessibility className="w-3.5 h-3.5" /> Step-Free
-                          </span>
-                        ) : (
-                          <span className="text-slate-400">Standard</span>
-                        )}
-                      </td>
-                      <td className="py-3.5 px-4 font-bold text-indigo-600">
-                        {v.checkInCount || 0}
-                      </td>
-                      <td className="py-3.5 px-4 text-right">
-                        <div className="flex items-center justify-end gap-1">
-                          <button
-                            onClick={() => handleOpenEditVenue(v)}
-                            className="p-1.5 text-slate-500 hover:text-indigo-600 rounded-lg hover:bg-slate-100"
-                            title="Edit venue"
-                          >
-                            <Edit2 className="w-4 h-4" />
+                      <td className="py-3 px-4 font-medium text-[#4f46e5]">{v.checkInCount || 0}</td>
+                      <td className="py-3 px-4 text-right">
+                        <div className="inline-flex items-center gap-1">
+                          <button onClick={() => handleOpenEditVenue(v)} className="p-1.5 text-[#9a9a9a] hover:text-[#4f46e5] hover:bg-[#f0f0ff] rounded-lg transition-colors" title="Edit">
+                            <Edit2 className="w-3.5 h-3.5" />
                           </button>
-                          <button
-                            onClick={() => setDeleteConfirm({ id: v.id, name: v.name, type: 'venue' })}
-                            className="p-1.5 text-slate-500 hover:text-rose-600 rounded-lg hover:bg-slate-100"
-                            title="Delete venue"
-                          >
-                            <Trash2 className="w-4 h-4" />
+                          <button onClick={() => setDeleteConfirm({ id: v.id, name: v.name, type: 'venue' })} className="p-1.5 text-[#9a9a9a] hover:text-[#dc2626] hover:bg-[#fff5f5] rounded-lg transition-colors" title="Delete">
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </td>
@@ -364,69 +337,54 @@ export const VenuesSessionsCRUD: React.FC = () => {
         </div>
       )}
 
-      {/* Sessions List */}
+      {/* Sessions table */}
       {activeTab === 'sessions' && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs">
+        <div className="bg-white rounded-xl border border-[#e8e8e8] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 border-b border-slate-200 dark:border-slate-800 uppercase tracking-wider font-bold">
+              <thead className="bg-[#f7f7f7] border-b border-[#e8e8e8]">
                 <tr>
-                  <th className="py-3.5 px-4">Session Title</th>
-                  <th className="py-3.5 px-4">Speaker</th>
-                  <th className="py-3.5 px-4">Room / Venue</th>
-                  <th className="py-3.5 px-4">Time Slot</th>
-                  <th className="py-3.5 px-4">Tags</th>
-                  <th className="py-3.5 px-4 text-right">Actions</th>
+                  {['Session', 'Speaker', 'Room', 'Time', 'Tags', ''].map(h => (
+                    <th key={h} className={`py-3 px-4 text-[11px] font-semibold uppercase tracking-wider text-[#6b6b6b] ${h === '' ? 'text-right' : ''}`}>
+                      {h}
+                    </th>
+                  ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
-                {sessions.map(s => {
-                  return (
-                    <tr key={s.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
-                      <td className="py-3.5 px-4 max-w-xs">
-                        <span className="font-bold text-slate-900 dark:text-white block">{s.title}</span>
-                        <span className="text-[11px] text-slate-400 line-clamp-1">{s.description}</span>
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <span className="font-bold text-slate-800 dark:text-slate-200 block">{s.speaker}</span>
-                        <span className="text-[10px] text-slate-400">{s.speakerRole}</span>
-                      </td>
-                      <td className="py-3.5 px-4 text-slate-600 dark:text-slate-300">
-                        {s.roomName}
-                      </td>
-                      <td className="py-3.5 px-4 font-semibold text-indigo-600">
-                        {formatTimeRange(s.startTime, s.endTime)}
-                      </td>
-                      <td className="py-3.5 px-4">
-                        <div className="flex flex-wrap gap-1">
-                          {s.tags.map(t => (
-                            <span key={t} className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-[10px] rounded">
-                              #{t}
-                            </span>
-                          ))}
-                        </div>
-                      </td>
-                      <td className="py-3.5 px-4 text-right">
-                        <div className="flex items-center justify-end gap-1">
-                          <button
-                            onClick={() => handleOpenEditSession(s)}
-                            className="p-1.5 text-slate-500 hover:text-indigo-600 rounded-lg hover:bg-slate-100"
-                            title="Edit session"
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => setDeleteConfirm({ id: s.id, name: s.title, type: 'session' })}
-                            className="p-1.5 text-slate-500 hover:text-rose-600 rounded-lg hover:bg-slate-100"
-                            title="Delete session"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
+              <tbody className="divide-y divide-[#f0f0f0]">
+                {sessions.map(s => (
+                  <tr key={s.id} className="hover:bg-[#f7f7f7] transition-colors">
+                    <td className="py-3 px-4 max-w-xs">
+                      <p className="font-medium text-[#0a0a0a]">{s.title}</p>
+                      <p className="text-[11px] text-[#9a9a9a] line-clamp-1">{s.description}</p>
+                    </td>
+                    <td className="py-3 px-4">
+                      <p className="font-medium text-[#0a0a0a]">{s.speaker}</p>
+                      <p className="text-[10px] text-[#9a9a9a]">{s.speakerRole}</p>
+                    </td>
+                    <td className="py-3 px-4 text-[#3a3a3a]">{s.roomName}</td>
+                    <td className="py-3 px-4 font-medium text-[#4f46e5] whitespace-nowrap">{formatTimeRange(s.startTime, s.endTime)}</td>
+                    <td className="py-3 px-4">
+                      <div className="flex flex-wrap gap-1">
+                        {s.tags.map(t => (
+                          <span key={t} className="px-1.5 py-0.5 bg-[#f0f0f0] text-[#3a3a3a] text-[10px] rounded">
+                            #{t}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <div className="inline-flex items-center gap-1">
+                        <button onClick={() => handleOpenEditSession(s)} className="p-1.5 text-[#9a9a9a] hover:text-[#4f46e5] hover:bg-[#f0f0ff] rounded-lg transition-colors" title="Edit">
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button onClick={() => setDeleteConfirm({ id: s.id, name: s.title, type: 'session' })} className="p-1.5 text-[#9a9a9a] hover:text-[#dc2626] hover:bg-[#fff5f5] rounded-lg transition-colors" title="Delete">
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -435,125 +393,45 @@ export const VenuesSessionsCRUD: React.FC = () => {
 
       {/* Venue Modal */}
       {venueModalOpen && (
-        <Modal
-          isOpen={true}
-          onClose={() => setVenueModalOpen(false)}
-          title={editingVenue ? 'Edit Venue Location' : 'Add New Venue Location'}
-          maxWidth="md"
-        >
-          <form onSubmit={handleSaveVenue} className="space-y-3.5 text-xs">
-            <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Venue Name
-              </label>
-              <input
-                type="text"
-                required
-                value={venueForm.name}
-                onChange={(e) => setVenueForm({ ...venueForm, name: e.target.value })}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500"
-              />
+        <Modal isOpen onClose={() => setVenueModalOpen(false)} title={editingVenue ? 'Edit Venue' : 'Add Venue'} maxWidth="md">
+          <form onSubmit={handleSaveVenue} className="space-y-3 text-xs">
+            <div><label className={lbl}>Venue Name</label>
+              <input type="text" required value={venueForm.name} onChange={e => setVenueForm({ ...venueForm, name: e.target.value })} className={inp} />
             </div>
-
             <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Type
-                </label>
-                <select
-                  value={venueForm.type}
-                  onChange={(e) => setVenueForm({ ...venueForm, type: e.target.value as VenueType })}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500"
-                >
-                  <option value="stage">Stage</option>
-                  <option value="booth">Booth / Expo</option>
-                  <option value="foodcourt">Food & Drink</option>
-                  <option value="restroom">Restroom</option>
-                  <option value="helpdesk">Help Desk</option>
-                  <option value="firstaid">First Aid</option>
-                  <option value="security">Security</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Zone
-                </label>
-                <select
-                  value={venueForm.zoneId}
-                  onChange={(e) => setVenueForm({ ...venueForm, zoneId: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500"
-                >
-                  {zones.map(z => (
-                    <option key={z.id} value={z.id}>
-                      {z.name}
-                    </option>
+              <div><label className={lbl}>Type</label>
+                <select value={venueForm.type} onChange={e => setVenueForm({ ...venueForm, type: e.target.value as VenueType })} className={inp}>
+                  {['stage','booth','foodcourt','restroom','helpdesk','firstaid','security'].map(t => (
+                    <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>
                   ))}
                 </select>
               </div>
+              <div><label className={lbl}>Zone</label>
+                <select value={venueForm.zoneId} onChange={e => setVenueForm({ ...venueForm, zoneId: e.target.value })} className={inp}>
+                  {zones.map(z => <option key={z.id} value={z.id}>{z.name}</option>)}
+                </select>
+              </div>
             </div>
-
             <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Map X Coordinate (0-100)
-                </label>
-                <input
-                  type="number"
-                  min={5}
-                  max={95}
-                  value={venueForm.x}
-                  onChange={(e) => setVenueForm({ ...venueForm, x: Number(e.target.value) })}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
-                />
+              <div><label className={lbl}>Map X (0–100)</label>
+                <input type="number" min={5} max={95} value={venueForm.x} onChange={e => setVenueForm({ ...venueForm, x: Number(e.target.value) })} className={inp} />
               </div>
-              <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Map Y Coordinate (0-100)
-                </label>
-                <input
-                  type="number"
-                  min={5}
-                  max={95}
-                  value={venueForm.y}
-                  onChange={(e) => setVenueForm({ ...venueForm, y: Number(e.target.value) })}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
-                />
+              <div><label className={lbl}>Map Y (0–100)</label>
+                <input type="number" min={5} max={95} value={venueForm.y} onChange={e => setVenueForm({ ...venueForm, y: Number(e.target.value) })} className={inp} />
               </div>
             </div>
-
-            <div className="flex items-center gap-2 pt-1">
-              <input
-                type="checkbox"
-                id="isAccessible"
-                checked={venueForm.isAccessible}
-                onChange={(e) => setVenueForm({ ...venueForm, isAccessible: e.target.checked })}
-                className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500"
-              />
-              <label htmlFor="isAccessible" className="font-semibold text-slate-700">
-                Step-Free Accessible (Wheelchair Ramp / Elevator Available)
-              </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="isAccessible" checked={venueForm.isAccessible}
+                onChange={e => setVenueForm({ ...venueForm, isAccessible: e.target.checked })}
+                className="w-4 h-4 accent-[#4f46e5]" />
+              <span className="text-xs font-medium text-[#3a3a3a]">Step-Free Accessible</span>
+            </label>
+            <div><label className={lbl}>Description</label>
+              <textarea rows={2} value={venueForm.description} onChange={e => setVenueForm({ ...venueForm, description: e.target.value })} className={inp + ' resize-none'} />
             </div>
-
-            <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Description
-              </label>
-              <textarea
-                rows={2}
-                value={venueForm.description}
-                onChange={(e) => setVenueForm({ ...venueForm, description: e.target.value })}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
-              />
-            </div>
-
-            <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
-              <Button variant="secondary" size="sm" onClick={() => setVenueModalOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit" variant="primary" size="sm">
-                Save Venue
-              </Button>
+            <div className="flex justify-end gap-2 pt-3 border-t border-[#f0f0f0]">
+              <Button variant="ghost" size="sm" type="button" onClick={() => setVenueModalOpen(false)}>Cancel</Button>
+              <Button variant="primary" size="sm" type="submit">Save Venue</Button>
             </div>
           </form>
         </Modal>
@@ -561,101 +439,33 @@ export const VenuesSessionsCRUD: React.FC = () => {
 
       {/* Session Modal */}
       {sessionModalOpen && (
-        <Modal
-          isOpen={true}
-          onClose={() => setSessionModalOpen(false)}
-          title={editingSession ? 'Edit Summit Session' : 'Add New Summit Session'}
-          maxWidth="md"
-        >
-          <form onSubmit={handleSaveSession} className="space-y-3.5 text-xs">
-            <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Session Title
-              </label>
-              <input
-                type="text"
-                required
-                value={sessionForm.title}
-                onChange={(e) => setSessionForm({ ...sessionForm, title: e.target.value })}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500"
-              />
+        <Modal isOpen onClose={() => setSessionModalOpen(false)} title={editingSession ? 'Edit Session' : 'Add Session'} maxWidth="md">
+          <form onSubmit={handleSaveSession} className="space-y-3 text-xs">
+            <div><label className={lbl}>Session Title</label>
+              <input type="text" required value={sessionForm.title} onChange={e => setSessionForm({ ...sessionForm, title: e.target.value })} className={inp} />
             </div>
-
             <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Speaker Name
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={sessionForm.speaker}
-                  onChange={(e) => setSessionForm({ ...sessionForm, speaker: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
-                />
+              <div><label className={lbl}>Speaker</label>
+                <input type="text" required value={sessionForm.speaker} onChange={e => setSessionForm({ ...sessionForm, speaker: e.target.value })} className={inp} />
               </div>
-              <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Speaker Role / Affiliation
-                </label>
-                <input
-                  type="text"
-                  value={sessionForm.speakerRole}
-                  onChange={(e) => setSessionForm({ ...sessionForm, speakerRole: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
-                />
+              <div><label className={lbl}>Speaker Role</label>
+                <input type="text" value={sessionForm.speakerRole} onChange={e => setSessionForm({ ...sessionForm, speakerRole: e.target.value })} className={inp} />
               </div>
             </div>
-
-            <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Venue Location
-              </label>
-              <select
-                value={sessionForm.venueId}
-                onChange={(e) => setSessionForm({ ...sessionForm, venueId: e.target.value })}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
-              >
-                {venues.map(v => (
-                  <option key={v.id} value={v.id}>
-                    {v.name} ({v.type})
-                  </option>
-                ))}
+            <div><label className={lbl}>Venue</label>
+              <select value={sessionForm.venueId} onChange={e => setSessionForm({ ...sessionForm, venueId: e.target.value })} className={inp}>
+                {venues.map(v => <option key={v.id} value={v.id}>{v.name} ({v.type})</option>)}
               </select>
             </div>
-
-            <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Tags (Comma separated)
-              </label>
-              <input
-                type="text"
-                value={sessionForm.tags}
-                onChange={(e) => setSessionForm({ ...sessionForm, tags: e.target.value })}
-                placeholder="AI, Robotics, Accessibility"
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
-              />
+            <div><label className={lbl}>Tags (comma-separated)</label>
+              <input type="text" value={sessionForm.tags} onChange={e => setSessionForm({ ...sessionForm, tags: e.target.value })} placeholder="AI, Robotics" className={inp} />
             </div>
-
-            <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Description
-              </label>
-              <textarea
-                rows={3}
-                value={sessionForm.description}
-                onChange={(e) => setSessionForm({ ...sessionForm, description: e.target.value })}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
-              />
+            <div><label className={lbl}>Description</label>
+              <textarea rows={3} value={sessionForm.description} onChange={e => setSessionForm({ ...sessionForm, description: e.target.value })} className={inp + ' resize-none'} />
             </div>
-
-            <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
-              <Button variant="secondary" size="sm" onClick={() => setSessionModalOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit" variant="primary" size="sm">
-                Save Session
-              </Button>
+            <div className="flex justify-end gap-2 pt-3 border-t border-[#f0f0f0]">
+              <Button variant="ghost" size="sm" type="button" onClick={() => setSessionModalOpen(false)}>Cancel</Button>
+              <Button variant="primary" size="sm" type="submit">Save Session</Button>
             </div>
           </form>
         </Modal>

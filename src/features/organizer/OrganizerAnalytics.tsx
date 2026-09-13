@@ -64,148 +64,86 @@ export const OrganizerAnalytics: React.FC = () => {
       checkIns: v.checkInCount || 0
     }));
 
+  /* shared chart tooltip style */
+  const tooltipStyle = { borderRadius: '8px', fontSize: '12px', border: '1px solid #e8e8e8', color: '#0a0a0a' };
+  const gridColor = '#f0f0f0';
+  const tickStyle = { fontSize: 11, fill: '#6b6b6b' };
+
+  const ChartCard = ({ eyebrow, title, icon, children }: {
+    eyebrow: string; title: string; icon: React.ReactNode; children: React.ReactNode;
+  }) => (
+    <div className="bg-white rounded-xl border border-[#e8e8e8] p-5 space-y-4">
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#6b6b6b]">{eyebrow}</p>
+          <h4 className="text-sm font-semibold text-[#0a0a0a] mt-0.5">{title}</h4>
+        </div>
+        <div className="text-[#9a9a9a] shrink-0">{icon}</div>
+      </div>
+      <div className="h-56 w-full">{children}</div>
+    </div>
+  );
+
   return (
-    <div className="space-y-6">
-      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs">
-        <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">
-          Summit Telemetry & Real-Time Analytics
-        </h3>
-        <p className="text-xs sm:text-sm text-slate-500 mt-1">
-          Operational telemetry cross-referencing zone density, attendee session interest, incident categories, and passport stamp foot-traffic.
+    <div className="space-y-5">
+      <div className="bg-white rounded-xl border border-[#e8e8e8] p-5">
+        <h3 className="text-base font-semibold text-[#0a0a0a]">Summit Telemetry &amp; Analytics</h3>
+        <p className="text-xs text-[#6b6b6b] mt-0.5">
+          Zone density, session interest, incident categories, and passport foot-traffic.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Chart 1: Zone Capacity vs Occupancy */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="text-[11px] font-bold text-indigo-600 uppercase tracking-wider">
-                Foot-Traffic
-              </span>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">
-                Zone Occupancy vs. Maximum Threshold
-              </h4>
-            </div>
-            <BarChart3 className="w-5 h-5 text-indigo-500" />
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <ChartCard eyebrow="Foot-Traffic" title="Zone Occupancy vs. Capacity" icon={<BarChart3 className="w-4 h-4" />}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={zoneCapacityData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} />
+              <XAxis dataKey="name" tick={tickStyle} />
+              <YAxis tick={tickStyle} />
+              <Tooltip contentStyle={tooltipStyle} />
+              <Bar dataKey="current" fill="#4f46e5" name="Current" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="max"     fill="#e8e8e8" name="Capacity" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartCard>
 
-          <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={zoneCapacityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip
-                  contentStyle={{ borderRadius: '12px', fontSize: '12px', border: '1px solid #cbd5e1' }}
-                />
-                <Bar dataKey="current" fill="#6366f1" name="Current Count" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="max" fill="#cbd5e1" name="Max Capacity" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+        <ChartCard eyebrow="Schedule Demand" title="Top Bookmarked Sessions" icon={<TrendingUp className="w-4 h-4" />}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={sessionPopularityData} layout="vertical" margin={{ top: 8, right: 16, left: 8, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke={gridColor} />
+              <XAxis type="number" tick={tickStyle} />
+              <YAxis dataKey="name" type="category" width={110} tick={{ fontSize: 10, fill: '#6b6b6b' }} />
+              <Tooltip contentStyle={tooltipStyle} />
+              <Bar dataKey="bookmarks" fill="#16a34a" name="Bookmarks" radius={[0, 4, 4, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartCard>
 
-        {/* Chart 2: Top Session Bookmarks */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">
-                Schedule Demand
-              </span>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">
-                Top Bookmarked Sessions (Attendee Interest)
-              </h4>
-            </div>
-            <TrendingUp className="w-5 h-5 text-emerald-500" />
-          </div>
+        <ChartCard eyebrow="Safety & Security" title="SOS Reports by Category" icon={<PieIcon className="w-4 h-4" />}>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie data={sosDistributionData} cx="50%" cy="45%" innerRadius={45} outerRadius={70} paddingAngle={4} dataKey="value">
+                {sosDistributionData.map((entry, i) => (
+                  <Cell key={i} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip contentStyle={tooltipStyle} />
+              <Legend verticalAlign="bottom" height={32} iconType="circle" wrapperStyle={{ fontSize: 11 }} />
+            </PieChart>
+          </ResponsiveContainer>
+        </ChartCard>
 
-          <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={sessionPopularityData}
-                layout="vertical"
-                margin={{ top: 10, right: 20, left: 10, bottom: 0 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
-                <XAxis type="number" tick={{ fontSize: 11 }} />
-                <YAxis dataKey="name" type="category" width={110} tick={{ fontSize: 10 }} />
-                <Tooltip
-                  contentStyle={{ borderRadius: '12px', fontSize: '12px', border: '1px solid #cbd5e1' }}
-                />
-                <Bar dataKey="bookmarks" fill="#10b981" name="Attendee Bookmarks" radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Chart 3: SOS Incident Categories */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="text-[11px] font-bold text-rose-600 uppercase tracking-wider">
-                Safety & Security
-              </span>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">
-                Emergency SOS Reports by Category
-              </h4>
-            </div>
-            <PieIcon className="w-5 h-5 text-rose-500" />
-          </div>
-
-          <div className="h-64 w-full flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={sosDistributionData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={80}
-                  paddingAngle={5}
-                  dataKey="value"
-                >
-                  {sosDistributionData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{ borderRadius: '12px', fontSize: '12px', border: '1px solid #cbd5e1' }}
-                />
-                <Legend verticalAlign="bottom" height={36} iconType="circle" />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Chart 4: Passport Foot-Traffic Check-Ins */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wider">
-                Exhibition Footfall
-              </span>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">
-                Venue Passport Stamp Count
-              </h4>
-            </div>
-            <Award className="w-5 h-5 text-amber-500" />
-          </div>
-
-          <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={venueTrafficData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-                <YAxis tick={{ fontSize: 11 }} />
-                <Tooltip
-                  contentStyle={{ borderRadius: '12px', fontSize: '12px', border: '1px solid #cbd5e1' }}
-                />
-                <Bar dataKey="checkIns" fill="#f59e0b" name="Passport Stamps" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+        <ChartCard eyebrow="Exhibition Footfall" title="Venue Passport Stamp Count" icon={<Award className="w-4 h-4" />}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={venueTrafficData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} />
+              <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#6b6b6b' }} />
+              <YAxis tick={tickStyle} />
+              <Tooltip contentStyle={tooltipStyle} />
+              <Bar dataKey="checkIns" fill="#b45309" name="Stamps" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartCard>
       </div>
     </div>
   );

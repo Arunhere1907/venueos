@@ -50,109 +50,100 @@ export const BroadcastManager: React.FC = () => {
     setSeverity('info');
   };
 
+  /* shared input style */
+  const inputCls = 'w-full px-3 py-2.5 bg-[#f7f7f7] border border-[#e8e8e8] rounded-lg text-xs text-[#0a0a0a] placeholder:text-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#4f46e5]';
+  const labelCls = 'block text-[11px] font-semibold uppercase tracking-wider text-[#6b6b6b] mb-1.5';
+
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs space-y-5">
+    <div className="bg-white rounded-xl border border-[#e8e8e8] p-5 space-y-5">
       <div>
-        <div className="flex items-center gap-2">
-          <Radio className="w-5 h-5 text-indigo-600" />
-          <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">
-            Push Event Announcement
-          </h3>
+        <div className="flex items-center gap-2 mb-0.5">
+          <Radio className="w-4 h-4 text-[#4f46e5]" />
+          <h3 className="text-base font-semibold text-[#0a0a0a]">Push Event Announcement</h3>
         </div>
-        <p className="text-xs sm:text-sm text-slate-500 mt-1">
-          Broadcast operational bulletins, schedule shifts, emergency warnings, or crowd advisories in real time to all attendee mobile devices.
+        <p className="text-xs text-[#6b6b6b]">
+          Broadcast bulletins, schedule shifts, warnings, or crowd advisories in real time to all attendee devices.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Severity Selector */}
+        {/* Severity */}
         <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-            Announcement Priority Level
-          </label>
+          <label className={labelCls}>Priority level</label>
           <div className="grid grid-cols-3 gap-2">
-            {[
-              { level: 'info', label: 'Info / General', color: 'border-sky-500 bg-sky-50 text-sky-700', icon: Info },
-              { level: 'warning', label: 'Warning / Advisory', color: 'border-amber-500 bg-amber-50 text-amber-800', icon: AlertTriangle },
-              { level: 'urgent', label: 'Urgent / Banner', color: 'border-rose-500 bg-rose-50 text-rose-700', icon: BellRing }
-            ].map(({ level, label, color, icon: Icon }) => (
+            {([
+              { level: 'info',    label: 'Info',    activeClass: 'border-[#0369a1] bg-[#f0f9ff] text-[#0369a1]', icon: Info          },
+              { level: 'warning', label: 'Warning', activeClass: 'border-[#b45309] bg-[#fffbeb] text-[#b45309]', icon: AlertTriangle  },
+              { level: 'urgent',  label: 'Urgent',  activeClass: 'border-[#dc2626] bg-[#fff5f5] text-[#dc2626]', icon: BellRing       },
+            ] as const).map(({ level, label, activeClass, icon: Icon }) => (
               <button
                 key={level}
                 type="button"
-                onClick={() => setSeverity(level as AnnouncementSeverity)}
-                className={`p-3 rounded-xl border text-left flex items-center gap-2 transition-all text-xs font-semibold ${
+                onClick={() => setSeverity(level)}
+                className={`flex items-center gap-2 p-3 rounded-lg border text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4f46e5] ${
                   severity === level
-                    ? `${color} ring-2 ring-indigo-500/20 shadow-xs`
-                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                    ? activeClass
+                    : 'border-[#e8e8e8] bg-white text-[#6b6b6b] hover:bg-[#f7f7f7]'
                 }`}
               >
                 <Icon className="w-4 h-4 shrink-0" />
-                <span>{label}</span>
+                {label}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Target Zone */}
+        {/* Target zone */}
         <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-            Geographic Scope
-          </label>
+          <label className={labelCls}>Geographic scope</label>
           <select
             value={targetZoneId}
-            onChange={(e) => setTargetZoneId(e.target.value)}
-            className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            onChange={e => setTargetZoneId(e.target.value)}
+            className={inputCls}
           >
-            <option value="all">Broadcast Entire Venue (All Attendees)</option>
+            <option value="all">Entire venue (all attendees)</option>
             {zones.map(z => (
-              <option key={z.id} value={z.id}>
-                Target: {z.name}
-              </option>
+              <option key={z.id} value={z.id}>{z.name}</option>
             ))}
           </select>
         </div>
 
         {/* Title */}
         <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-            Headline / Subject
-          </label>
+          <label className={labelCls}>Headline</label>
           <input
             type="text"
             required
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g. Keynote Q&A Starting in Main Amphitheater"
+            onChange={e => setTitle(e.target.value)}
+            placeholder="e.g. Keynote Q&A starting in Main Amphitheater"
             maxLength={200}
-            className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className={inputCls}
           />
         </div>
 
-        {/* Message Body */}
+        {/* Body */}
         <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-            Full Announcement Body
-          </label>
+          <label className={labelCls}>Message body</label>
           <textarea
             required
             rows={3}
             value={body}
-            onChange={(e) => setBody(e.target.value)}
-            placeholder="Provide clear, concise instructions. Text will also be read aloud to vision-impaired attendees using text-to-speech."
+            onChange={e => setBody(e.target.value)}
+            placeholder="Provide clear, concise instructions."
             maxLength={1000}
-            className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className={inputCls + ' resize-none'}
           />
         </div>
 
-        {/* Submit */}
-        <div className="flex justify-end pt-2">
+        <div className="flex justify-end pt-1">
           <Button
             type="submit"
             variant="primary"
-            leftIcon={<Send className="w-4 h-4" />}
+            leftIcon={<Send className="w-3.5 h-3.5" />}
             disabled={!title.trim() || !body.trim()}
           >
-            Transmit Live Broadcast
+            Transmit Broadcast
           </Button>
         </div>
       </form>
