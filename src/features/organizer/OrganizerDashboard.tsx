@@ -60,7 +60,7 @@ export const OrganizerDashboard: React.FC = () => {
       <OrganizerMetricsBar />
 
       {/* Sub-Navigation Tabs */}
-      <div className="flex items-center gap-1.5 p-1.5 bg-slate-100 dark:bg-slate-800/80 rounded-2xl overflow-x-auto scrollbar-none">
+      <div className="flex items-center gap-2 p-2 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-x-auto scrollbar-none">
         {[
           { id: 'ops', label: 'Command & SOS', icon: ShieldAlert },
           { id: 'analytics', label: 'Telemetry & Analytics', icon: BarChart3 },
@@ -71,10 +71,10 @@ export const OrganizerDashboard: React.FC = () => {
           <button
             key={id}
             onClick={() => setActiveSubTab(id as any)}
-            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap ${
+            className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center gap-2 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
               activeSubTab === id
-                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
             <Icon className="w-4 h-4" />
@@ -100,28 +100,28 @@ export const OrganizerDashboard: React.FC = () => {
       {activeSubTab === 'polls' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Create Poll Card */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+          <div className="bg-white dark:bg-slate-900 rounded-lg p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
             <div>
               <span className="text-[11px] font-bold text-indigo-600 uppercase tracking-wider">
                 Audience Engagement
               </span>
-              <h3 className="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mt-1">
                 Launch Live Session Poll
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-500 mt-2">
                 Push interactive feedback questions directly onto attendee mobile screens during talks.
               </p>
             </div>
 
-            <form onSubmit={handleLaunchPoll} className="space-y-3.5 text-xs">
+            <form onSubmit={handleLaunchPoll} className="space-y-3">
               <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 uppercase text-xs tracking-wider mb-2">
                   Target Session
                 </label>
                 <select
                   value={selectedSessionId}
                   onChange={(e) => setSelectedSessionId(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:text-white"
                 >
                   {sessions.map(s => (
                     <option key={s.id} value={s.id}>
@@ -132,7 +132,7 @@ export const OrganizerDashboard: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 uppercase text-xs tracking-wider mb-2">
                   Poll Question
                 </label>
                 <input
@@ -141,12 +141,12 @@ export const OrganizerDashboard: React.FC = () => {
                   value={pollQuestion}
                   onChange={(e) => setPollQuestion(e.target.value)}
                   placeholder="e.g. Which generative AI topic should we dive deeper into?"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:text-white"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 uppercase text-xs tracking-wider mb-2">
                   Answer Options (Comma separated)
                 </label>
                 <input
@@ -155,7 +155,7 @@ export const OrganizerDashboard: React.FC = () => {
                   value={pollOptions}
                   onChange={(e) => setPollOptions(e.target.value)}
                   placeholder="Agents & Tool Use, Fine-Tuning, Real-Time Audio"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:text-white"
                 />
               </div>
 
@@ -172,26 +172,26 @@ export const OrganizerDashboard: React.FC = () => {
           </div>
 
           {/* Active Polls Summary */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
-            <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">
+          <div className="bg-white dark:bg-slate-900 rounded-lg p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
               Active Polls ({polls.length})
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {polls.map(poll => {
                 const session = sessions.find(s => s.id === poll.sessionId);
                 const totalVotes = (poll.votes || []).reduce((sum, v) => sum + v, 0);
 
                 return (
-                  <div key={poll.id} className="p-4 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2 text-xs">
+                  <div key={poll.id} className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-slate-900 dark:text-white">
+                      <span className="font-semibold text-slate-900 dark:text-white text-sm">
                         {poll.question}
                       </span>
-                      <span className="text-[11px] text-slate-400">
+                      <span className="text-xs text-slate-400">
                         {totalVotes} votes
                       </span>
                     </div>
-                    <span className="text-[11px] text-indigo-600 block">
+                    <span className="text-xs text-indigo-600 dark:text-indigo-400 block">
                       Session: {session?.title || 'General'}
                     </span>
                     <div className="space-y-1 pt-1">
@@ -199,9 +199,9 @@ export const OrganizerDashboard: React.FC = () => {
                         const count = poll.votes?.[idx] || 0;
                         const pct = totalVotes > 0 ? Math.round((count / totalVotes) * 100) : 0;
                         return (
-                          <div key={idx} className="flex items-center justify-between text-slate-600 dark:text-slate-300">
+                          <div key={idx} className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-300">
                             <span>{optText}</span>
-                            <span className="font-bold">{count} ({pct}%)</span>
+                            <span className="font-medium">{count} ({pct}%)</span>
                           </div>
                         );
                       })}

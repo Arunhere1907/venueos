@@ -65,29 +65,30 @@ export const OrganizerAnalytics: React.FC = () => {
     }));
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs">
-        <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="bg-white dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800 shadow-sm">
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white">
           Summit Telemetry & Real-Time Analytics
         </h3>
-        <p className="text-xs sm:text-sm text-slate-500 mt-1">
+        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
           Operational telemetry cross-referencing zone density, attendee session interest, incident categories, and passport stamp foot-traffic.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Chart 1: Zone Capacity vs Occupancy */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+        <div className="bg-white dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-[11px] font-bold text-indigo-600 uppercase tracking-wider">
+              <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
                 Foot-Traffic
               </span>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">
+              <h4 className="text-sm font-semibold text-slate-900 dark:text-white mt-0.5">
                 Zone Occupancy vs. Maximum Threshold
               </h4>
             </div>
-            <BarChart3 className="w-5 h-5 text-indigo-500" />
+            <BarChart3 className="w-5 h-5 text-indigo-500 shrink-0" />
           </div>
 
           <div className="h-64 w-full">
@@ -97,7 +98,7 @@ export const OrganizerAnalytics: React.FC = () => {
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip
-                  contentStyle={{ borderRadius: '12px', fontSize: '12px', border: '1px solid #cbd5e1' }}
+                  contentStyle={{ borderRadius: '8px', fontSize: '12px', border: '1px solid #cbd5e1' }}
                 />
                 <Bar dataKey="current" fill="#6366f1" name="Current Count" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="max" fill="#cbd5e1" name="Max Capacity" radius={[4, 4, 0, 0]} />
@@ -107,17 +108,17 @@ export const OrganizerAnalytics: React.FC = () => {
         </div>
 
         {/* Chart 2: Top Session Bookmarks */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+        <div className="bg-white dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">
+              <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
                 Schedule Demand
               </span>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">
+              <h4 className="text-sm font-semibold text-slate-900 dark:text-white mt-0.5">
                 Top Bookmarked Sessions (Attendee Interest)
               </h4>
             </div>
-            <TrendingUp className="w-5 h-5 text-emerald-500" />
+            <TrendingUp className="w-5 h-5 text-emerald-500 shrink-0" />
           </div>
 
           <div className="h-64 w-full">
@@ -131,7 +132,7 @@ export const OrganizerAnalytics: React.FC = () => {
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis dataKey="name" type="category" width={110} tick={{ fontSize: 10 }} />
                 <Tooltip
-                  contentStyle={{ borderRadius: '12px', fontSize: '12px', border: '1px solid #cbd5e1' }}
+                  contentStyle={{ borderRadius: '8px', fontSize: '12px', border: '1px solid #cbd5e1' }}
                 />
                 <Bar dataKey="bookmarks" fill="#10b981" name="Attendee Bookmarks" radius={[0, 4, 4, 0]} />
               </BarChart>
@@ -140,17 +141,17 @@ export const OrganizerAnalytics: React.FC = () => {
         </div>
 
         {/* Chart 3: SOS Incident Categories */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+        <div className="bg-white dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-[11px] font-bold text-rose-600 uppercase tracking-wider">
+              <span className="text-[11px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider">
                 Safety & Security
               </span>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">
+              <h4 className="text-sm font-semibold text-slate-900 dark:text-white mt-0.5">
                 Emergency SOS Reports by Category
               </h4>
             </div>
-            <PieIcon className="w-5 h-5 text-rose-500" />
+            <PieIcon className="w-5 h-5 text-rose-500 shrink-0" />
           </div>
 
           <div className="h-64 w-full flex items-center justify-center">
@@ -170,7 +171,7 @@ export const OrganizerAnalytics: React.FC = () => {
                   ))}
                 </Pie>
                 <Tooltip
-                  contentStyle={{ borderRadius: '12px', fontSize: '12px', border: '1px solid #cbd5e1' }}
+                  contentStyle={{ borderRadius: '8px', fontSize: '12px', border: '1px solid #cbd5e1' }}
                 />
                 <Legend verticalAlign="bottom" height={36} iconType="circle" />
               </PieChart>
@@ -179,17 +180,17 @@ export const OrganizerAnalytics: React.FC = () => {
         </div>
 
         {/* Chart 4: Passport Foot-Traffic Check-Ins */}
-        <div className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+        <div className="bg-white dark:bg-slate-900 rounded-lg p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-[11px] font-bold text-amber-600 uppercase tracking-wider">
+              <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
                 Exhibition Footfall
               </span>
-              <h4 className="text-base font-bold text-slate-900 dark:text-white">
+              <h4 className="text-sm font-semibold text-slate-900 dark:text-white mt-0.5">
                 Venue Passport Stamp Count
               </h4>
             </div>
-            <Award className="w-5 h-5 text-amber-500" />
+            <Award className="w-5 h-5 text-amber-500 shrink-0" />
           </div>
 
           <div className="h-64 w-full">
@@ -199,7 +200,7 @@ export const OrganizerAnalytics: React.FC = () => {
                 <XAxis dataKey="name" tick={{ fontSize: 10 }} />
                 <YAxis tick={{ fontSize: 11 }} />
                 <Tooltip
-                  contentStyle={{ borderRadius: '12px', fontSize: '12px', border: '1px solid #cbd5e1' }}
+                  contentStyle={{ borderRadius: '8px', fontSize: '12px', border: '1px solid #cbd5e1' }}
                 />
                 <Bar dataKey="checkIns" fill="#f59e0b" name="Passport Stamps" radius={[4, 4, 0, 0]} />
               </BarChart>

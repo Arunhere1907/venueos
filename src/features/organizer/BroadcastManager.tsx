@@ -51,15 +51,15 @@ export const BroadcastManager: React.FC = () => {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-xs space-y-5">
+    <div className="bg-white dark:bg-slate-900 rounded-lg p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
       <div>
         <div className="flex items-center gap-2">
           <Radio className="w-5 h-5 text-indigo-600" />
-          <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white">
             Push Event Announcement
           </h3>
         </div>
-        <p className="text-xs sm:text-sm text-slate-500 mt-1">
+        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
           Broadcast operational bulletins, schedule shifts, emergency warnings, or crowd advisories in real time to all attendee mobile devices.
         </p>
       </div>
@@ -67,23 +67,23 @@ export const BroadcastManager: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Severity Selector */}
         <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
             Announcement Priority Level
           </label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             {[
-              { level: 'info', label: 'Info / General', color: 'border-sky-500 bg-sky-50 text-sky-700', icon: Info },
-              { level: 'warning', label: 'Warning / Advisory', color: 'border-amber-500 bg-amber-50 text-amber-800', icon: AlertTriangle },
-              { level: 'urgent', label: 'Urgent / Banner', color: 'border-rose-500 bg-rose-50 text-rose-700', icon: BellRing }
+              { level: 'info', label: 'Info / General', color: 'border-sky-500 bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300', icon: Info },
+              { level: 'warning', label: 'Warning / Advisory', color: 'border-amber-500 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300', icon: AlertTriangle },
+              { level: 'urgent', label: 'Urgent / Banner', color: 'border-rose-500 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300', icon: BellRing }
             ].map(({ level, label, color, icon: Icon }) => (
               <button
                 key={level}
                 type="button"
                 onClick={() => setSeverity(level as AnnouncementSeverity)}
-                className={`p-3 rounded-xl border text-left flex items-center gap-2 transition-all text-xs font-semibold ${
+                className={`p-3 rounded-lg border text-left flex items-center gap-2 transition-all text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                   severity === level
-                    ? `${color} ring-2 ring-indigo-500/20 shadow-xs`
-                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+                    ? `${color} ring-2 ring-indigo-500/20`
+                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
                 }`}
               >
                 <Icon className="w-4 h-4 shrink-0" />
@@ -95,13 +95,13 @@ export const BroadcastManager: React.FC = () => {
 
         {/* Target Zone */}
         <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
             Geographic Scope
           </label>
           <select
             value={targetZoneId}
             onChange={(e) => setTargetZoneId(e.target.value)}
-            className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-900 dark:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
           >
             <option value="all">Broadcast Entire Venue (All Attendees)</option>
             {zones.map(z => (
@@ -114,7 +114,7 @@ export const BroadcastManager: React.FC = () => {
 
         {/* Title */}
         <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
             Headline / Subject
           </label>
           <input
@@ -124,13 +124,13 @@ export const BroadcastManager: React.FC = () => {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g. Keynote Q&A Starting in Main Amphitheater"
             maxLength={200}
-            className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
           />
         </div>
 
         {/* Message Body */}
         <div>
-          <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
             Full Announcement Body
           </label>
           <textarea
@@ -140,7 +140,7 @@ export const BroadcastManager: React.FC = () => {
             onChange={(e) => setBody(e.target.value)}
             placeholder="Provide clear, concise instructions. Text will also be read aloud to vision-impaired attendees using text-to-speech."
             maxLength={1000}
-            className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 resize-none"
           />
         </div>
 

@@ -150,7 +150,7 @@ export const AIConciergeChat: React.FC<AIConciergeChatProps> = ({ onNavigateToVe
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Open AI Event Concierge Chatbot"
-        className="fixed bottom-24 right-6 z-30 p-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-xl hover:shadow-indigo-500/25 transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2 border border-indigo-400/30"
+        className="fixed bottom-24 right-6 z-30 p-3.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg hover:shadow-indigo-500/25 transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2 border border-indigo-400/30"
       >
         <Sparkles className="w-5 h-5 text-indigo-200" />
         <span className="text-xs font-bold hidden sm:inline">AI Concierge</span>
@@ -158,11 +158,11 @@ export const AIConciergeChat: React.FC<AIConciergeChatProps> = ({ onNavigateToVe
 
       {/* Floating Chat Drawer */}
       {isOpen && (
-        <div className="fixed bottom-24 right-4 sm:bottom-24 sm:right-6 z-40 w-[calc(100vw-2rem)] sm:w-96 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[calc(100vh-8rem)] sm:max-h-[560px] animate-slideUp">
+        <div className="fixed bottom-24 right-4 sm:bottom-24 sm:right-6 z-40 w-[calc(100vw-2rem)] sm:w-96 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[calc(100vh-8rem)] sm:max-h-[560px] animate-slideUp">
           {/* Top Bar */}
           <div className="px-5 py-4 bg-indigo-600 text-white flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
                 <Bot className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -176,7 +176,7 @@ export const AIConciergeChat: React.FC<AIConciergeChatProps> = ({ onNavigateToVe
 
             <button
               onClick={() => setIsOpen(false)}
-              className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+              className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
             >
               <X className="w-5 h-5" />
             </button>
@@ -188,7 +188,7 @@ export const AIConciergeChat: React.FC<AIConciergeChatProps> = ({ onNavigateToVe
               <button
                 key={idx}
                 onClick={() => handleSendMessage(q)}
-                className="text-[11px] px-2.5 py-1 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 whitespace-nowrap hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                className="text-[11px] px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 whitespace-nowrap hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:text-indigo-600 dark:hover:text-indigo-400 hover:border-indigo-200 dark:hover:border-indigo-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               >
                 {q}
               </button>
@@ -209,10 +209,10 @@ export const AIConciergeChat: React.FC<AIConciergeChatProps> = ({ onNavigateToVe
                 )}
 
                 <div
-                  className={`max-w-[82%] p-3 rounded-2xl ${
+                  className={`max-w-[82%] p-3 rounded-lg ${
                     m.sender === 'user'
-                      ? 'bg-indigo-600 text-white rounded-tr-xs'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-tl-xs'
+                      ? 'bg-indigo-600 text-white rounded-tr-sm'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-tl-sm'
                   } space-y-2`}
                 >
                   <p className="leading-relaxed">{m.text}</p>
@@ -252,12 +252,12 @@ export const AIConciergeChat: React.FC<AIConciergeChatProps> = ({ onNavigateToVe
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Ask anything about the venue..."
               maxLength={500}
-              className="flex-1 px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="flex-1 px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
             />
             <button
               type="submit"
               disabled={!inputValue.trim()}
-              className="p-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-xl transition-colors"
+              className="p-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
             >
               <Send className="w-4 h-4" />
             </button>

@@ -238,38 +238,41 @@ export const VenuesSessionsCRUD: React.FC = () => {
     setSessionModalOpen(false);
   };
 
+  /* Shared input class for all modal form fields */
+  const inputCls = "w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500";
+
   return (
     <div className="space-y-5">
       {/* Top Selector and Add Button */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-5 rounded-lg border border-slate-200 dark:border-slate-800 shadow-sm">
         <div>
-          <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white">
             Venues & Event Programming Directory
           </h3>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Configure map coordinates, accessibility specifications, speaker details, and room capacities.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           {/* Tab Switcher */}
-          <div className="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center gap-1">
+          <div className="bg-slate-100 dark:bg-slate-800 p-1 rounded-lg flex items-center gap-1">
             <button
               onClick={() => setActiveTab('venues')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                 activeTab === 'venues'
-                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
             >
               Venues ({venues.length})
             </button>
             <button
               onClick={() => setActiveTab('sessions')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                 activeTab === 'sessions'
-                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
             >
               Sessions ({sessions.length})
@@ -289,10 +292,10 @@ export const VenuesSessionsCRUD: React.FC = () => {
 
       {/* Venues Table / List */}
       {activeTab === 'venues' && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 border-b border-slate-200 dark:border-slate-800 uppercase tracking-wider font-bold">
+              <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 uppercase tracking-wider font-semibold">
                 <tr>
                   <th className="py-3.5 px-4">Venue Name</th>
                   <th className="py-3.5 px-4">Type</th>
@@ -311,7 +314,7 @@ export const VenuesSessionsCRUD: React.FC = () => {
                   return (
                     <tr key={v.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
                       <td className="py-3.5 px-4">
-                        <span className="font-bold text-slate-900 dark:text-white block">{v.name}</span>
+                        <span className="font-semibold text-slate-900 dark:text-white block">{v.name}</span>
                         <span className="text-[11px] text-slate-400 line-clamp-1">{v.description}</span>
                       </td>
                       <td className="py-3.5 px-4">
@@ -322,34 +325,36 @@ export const VenuesSessionsCRUD: React.FC = () => {
                       <td className="py-3.5 px-4 text-slate-600 dark:text-slate-300">
                         {zone?.name || v.zoneId}
                       </td>
-                      <td className="py-3.5 px-4 font-mono text-slate-500">
+                      <td className="py-3.5 px-4 font-mono text-slate-500 dark:text-slate-400">
                         ({v.x}, {v.y})
                       </td>
                       <td className="py-3.5 px-4">
                         {v.isAccessible ? (
-                          <span className="text-emerald-600 font-bold flex items-center gap-1">
+                          <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
                             <Accessibility className="w-3.5 h-3.5" /> Step-Free
                           </span>
                         ) : (
                           <span className="text-slate-400">Standard</span>
                         )}
                       </td>
-                      <td className="py-3.5 px-4 font-bold text-indigo-600">
+                      <td className="py-3.5 px-4 font-bold text-indigo-600 dark:text-indigo-400">
                         {v.checkInCount || 0}
                       </td>
                       <td className="py-3.5 px-4 text-right">
                         <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => handleOpenEditVenue(v)}
-                            className="p-1.5 text-slate-500 hover:text-indigo-600 rounded-lg hover:bg-slate-100"
+                            className="p-1.5 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 transition-colors"
                             title="Edit venue"
+                            aria-label={`Edit ${v.name}`}
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => setDeleteConfirm({ id: v.id, name: v.name, type: 'venue' })}
-                            className="p-1.5 text-slate-500 hover:text-rose-600 rounded-lg hover:bg-slate-100"
+                            className="p-1.5 text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 transition-colors"
                             title="Delete venue"
+                            aria-label={`Delete ${v.name}`}
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -366,10 +371,10 @@ export const VenuesSessionsCRUD: React.FC = () => {
 
       {/* Sessions List */}
       {activeTab === 'sessions' && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 border-b border-slate-200 dark:border-slate-800 uppercase tracking-wider font-bold">
+              <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 uppercase tracking-wider font-semibold">
                 <tr>
                   <th className="py-3.5 px-4">Session Title</th>
                   <th className="py-3.5 px-4">Speaker</th>
@@ -384,23 +389,23 @@ export const VenuesSessionsCRUD: React.FC = () => {
                   return (
                     <tr key={s.id} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
                       <td className="py-3.5 px-4 max-w-xs">
-                        <span className="font-bold text-slate-900 dark:text-white block">{s.title}</span>
+                        <span className="font-semibold text-slate-900 dark:text-white block">{s.title}</span>
                         <span className="text-[11px] text-slate-400 line-clamp-1">{s.description}</span>
                       </td>
                       <td className="py-3.5 px-4">
-                        <span className="font-bold text-slate-800 dark:text-slate-200 block">{s.speaker}</span>
-                        <span className="text-[10px] text-slate-400">{s.speakerRole}</span>
+                        <span className="font-semibold text-slate-800 dark:text-slate-200 block">{s.speaker}</span>
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500">{s.speakerRole}</span>
                       </td>
                       <td className="py-3.5 px-4 text-slate-600 dark:text-slate-300">
                         {s.roomName}
                       </td>
-                      <td className="py-3.5 px-4 font-semibold text-indigo-600">
+                      <td className="py-3.5 px-4 font-semibold text-indigo-600 dark:text-indigo-400">
                         {formatTimeRange(s.startTime, s.endTime)}
                       </td>
                       <td className="py-3.5 px-4">
                         <div className="flex flex-wrap gap-1">
                           {s.tags.map(t => (
-                            <span key={t} className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-[10px] rounded">
+                            <span key={t} className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 text-[10px] rounded text-slate-600 dark:text-slate-400">
                               #{t}
                             </span>
                           ))}
@@ -410,15 +415,17 @@ export const VenuesSessionsCRUD: React.FC = () => {
                         <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => handleOpenEditSession(s)}
-                            className="p-1.5 text-slate-500 hover:text-indigo-600 rounded-lg hover:bg-slate-100"
+                            className="p-1.5 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 transition-colors"
                             title="Edit session"
+                            aria-label={`Edit ${s.title}`}
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => setDeleteConfirm({ id: s.id, name: s.title, type: 'session' })}
-                            className="p-1.5 text-slate-500 hover:text-rose-600 rounded-lg hover:bg-slate-100"
+                            className="p-1.5 text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 transition-colors"
                             title="Delete session"
+                            aria-label={`Delete ${s.title}`}
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -441,9 +448,9 @@ export const VenuesSessionsCRUD: React.FC = () => {
           title={editingVenue ? 'Edit Venue Location' : 'Add New Venue Location'}
           maxWidth="md"
         >
-          <form onSubmit={handleSaveVenue} className="space-y-3.5 text-xs">
+          <form onSubmit={handleSaveVenue} className="space-y-4 text-sm">
             <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Venue Name
               </label>
               <input
@@ -451,19 +458,19 @@ export const VenuesSessionsCRUD: React.FC = () => {
                 required
                 value={venueForm.name}
                 onChange={(e) => setVenueForm({ ...venueForm, name: e.target.value })}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500"
+                className={inputCls}
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                   Type
                 </label>
                 <select
                   value={venueForm.type}
                   onChange={(e) => setVenueForm({ ...venueForm, type: e.target.value as VenueType })}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500"
+                  className={inputCls}
                 >
                   <option value="stage">Stage</option>
                   <option value="booth">Booth / Expo</option>
@@ -476,13 +483,13 @@ export const VenuesSessionsCRUD: React.FC = () => {
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                   Zone
                 </label>
                 <select
                   value={venueForm.zoneId}
                   onChange={(e) => setVenueForm({ ...venueForm, zoneId: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500"
+                  className={inputCls}
                 >
                   {zones.map(z => (
                     <option key={z.id} value={z.id}>
@@ -493,10 +500,10 @@ export const VenuesSessionsCRUD: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Map X Coordinate (0-100)
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                  Map X (0–100)
                 </label>
                 <input
                   type="number"
@@ -504,12 +511,12 @@ export const VenuesSessionsCRUD: React.FC = () => {
                   max={95}
                   value={venueForm.x}
                   onChange={(e) => setVenueForm({ ...venueForm, x: Number(e.target.value) })}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
+                  className={inputCls}
                 />
               </div>
               <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Map Y Coordinate (0-100)
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                  Map Y (0–100)
                 </label>
                 <input
                   type="number"
@@ -517,37 +524,37 @@ export const VenuesSessionsCRUD: React.FC = () => {
                   max={95}
                   value={venueForm.y}
                   onChange={(e) => setVenueForm({ ...venueForm, y: Number(e.target.value) })}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
+                  className={inputCls}
                 />
               </div>
             </div>
 
-            <div className="flex items-center gap-2 pt-1">
+            <div className="flex items-center gap-2">
               <input
                 type="checkbox"
                 id="isAccessible"
                 checked={venueForm.isAccessible}
                 onChange={(e) => setVenueForm({ ...venueForm, isAccessible: e.target.checked })}
-                className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500"
+                className="w-4 h-4 rounded text-indigo-600 focus-visible:ring-indigo-500 border-slate-300 dark:border-slate-600"
               />
-              <label htmlFor="isAccessible" className="font-semibold text-slate-700">
+              <label htmlFor="isAccessible" className="text-sm font-medium text-slate-700 dark:text-slate-300">
                 Step-Free Accessible (Wheelchair Ramp / Elevator Available)
               </label>
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Description
               </label>
               <textarea
                 rows={2}
                 value={venueForm.description}
                 onChange={(e) => setVenueForm({ ...venueForm, description: e.target.value })}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
+                className={inputCls + ' resize-none'}
               />
             </div>
 
-            <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+            <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
               <Button variant="secondary" size="sm" onClick={() => setVenueModalOpen(false)}>
                 Cancel
               </Button>
@@ -567,9 +574,9 @@ export const VenuesSessionsCRUD: React.FC = () => {
           title={editingSession ? 'Edit Summit Session' : 'Add New Summit Session'}
           maxWidth="md"
         >
-          <form onSubmit={handleSaveSession} className="space-y-3.5 text-xs">
+          <form onSubmit={handleSaveSession} className="space-y-4 text-sm">
             <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Session Title
               </label>
               <input
@@ -577,13 +584,13 @@ export const VenuesSessionsCRUD: React.FC = () => {
                 required
                 value={sessionForm.title}
                 onChange={(e) => setSessionForm({ ...sessionForm, title: e.target.value })}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500"
+                className={inputCls}
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                   Speaker Name
                 </label>
                 <input
@@ -591,30 +598,30 @@ export const VenuesSessionsCRUD: React.FC = () => {
                   required
                   value={sessionForm.speaker}
                   onChange={(e) => setSessionForm({ ...sessionForm, speaker: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
+                  className={inputCls}
                 />
               </div>
               <div>
-                <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Speaker Role / Affiliation
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                  Role / Affiliation
                 </label>
                 <input
                   type="text"
                   value={sessionForm.speakerRole}
                   onChange={(e) => setSessionForm({ ...sessionForm, speakerRole: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
+                  className={inputCls}
                 />
               </div>
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Venue Location
               </label>
               <select
                 value={sessionForm.venueId}
                 onChange={(e) => setSessionForm({ ...sessionForm, venueId: e.target.value })}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
+                className={inputCls}
               >
                 {venues.map(v => (
                   <option key={v.id} value={v.id}>
@@ -625,31 +632,31 @@ export const VenuesSessionsCRUD: React.FC = () => {
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
-                Tags (Comma separated)
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                Tags (comma-separated)
               </label>
               <input
                 type="text"
                 value={sessionForm.tags}
                 onChange={(e) => setSessionForm({ ...sessionForm, tags: e.target.value })}
                 placeholder="AI, Robotics, Accessibility"
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
+                className={inputCls}
               />
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700 uppercase tracking-wider mb-1">
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                 Description
               </label>
               <textarea
                 rows={3}
                 value={sessionForm.description}
                 onChange={(e) => setSessionForm({ ...sessionForm, description: e.target.value })}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
+                className={inputCls + ' resize-none'}
               />
             </div>
 
-            <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+            <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
               <Button variant="secondary" size="sm" onClick={() => setSessionModalOpen(false)}>
                 Cancel
               </Button>

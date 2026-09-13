@@ -81,17 +81,17 @@ export const EventPassport: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Passport Header & Progress */}
-      <div className="bg-linear-to-br from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 text-white shadow-xl space-y-4">
+      <div className="bg-linear-to-br from-slate-900 via-indigo-950 to-slate-900 rounded-lg p-6 text-white shadow-lg space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center">
               <Award className="w-6 h-6 text-indigo-300" />
             </div>
             <div>
               <span className="text-[11px] uppercase tracking-wider font-bold text-indigo-400">
                 Official Event Passport
               </span>
-              <h2 className="text-xl font-extrabold text-white">
+              <h2 className="text-xl font-bold text-white">
                 {profile.name}
               </h2>
             </div>
@@ -136,14 +136,14 @@ export const EventPassport: React.FC = () => {
             return (
               <div
                 key={b.id}
-                className={`p-4 rounded-2xl border text-center transition-all ${
+                className={`p-4 rounded-lg border text-center transition-all ${
                   b.unlocked
                     ? 'bg-white dark:bg-slate-900 border-indigo-200 dark:border-indigo-900 shadow-sm'
                     : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 opacity-60'
                 }`}
               >
                 <div
-                  className={`w-10 h-10 rounded-xl mx-auto flex items-center justify-center mb-2 border ${
+                  className={`w-10 h-10 rounded-lg mx-auto flex items-center justify-center mb-2 border ${
                     b.unlocked ? b.color : 'bg-slate-200 text-slate-400 border-slate-300'
                   }`}
                 >
@@ -184,15 +184,15 @@ export const EventPassport: React.FC = () => {
             return (
               <div
                 key={venue.id}
-                className={`p-4 rounded-2xl border flex items-center justify-between gap-3 transition-all ${
+                className={`p-4 rounded-lg border flex items-center justify-between gap-3 transition-all ${
                   isDone
-                    ? 'bg-white dark:bg-slate-900 border-emerald-200 dark:border-emerald-900/60 shadow-xs'
+                    ? 'bg-white dark:bg-slate-900 border-emerald-200 dark:border-emerald-900/60 shadow-sm'
                     : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800'
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <div
-                    className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
+                    className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
                       isDone
                         ? 'bg-emerald-100 text-emerald-600'
                         : 'bg-slate-100 text-slate-400'

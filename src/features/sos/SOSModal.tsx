@@ -89,28 +89,28 @@ export const SOSModal: React.FC = () => {
           </div>
 
           <div>
-            <span className="text-xs uppercase tracking-wider font-bold text-rose-600">
+            <span className="text-xs uppercase tracking-wider font-semibold text-rose-600">
               Live Priority Dispatch Ticket
             </span>
-            <h3 className="text-xl font-extrabold text-slate-900 mt-1">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white mt-1">
               {activeRequest.status === 'acknowledged'
                 ? 'Responder En Route'
                 : 'Help Request Transmitted'}
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               Ticket ID: {activeRequest.id} • Assigned to Event Operations Desk
             </p>
           </div>
 
           {/* Status Indicator Card */}
-          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left space-y-2">
+          <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700 text-left space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-500 font-medium">Status:</span>
+              <span className="text-slate-500 dark:text-slate-400 font-medium">Status:</span>
               <span
-                className={`font-bold px-2.5 py-0.5 rounded-full ${
+                className={`font-semibold px-2.5 py-0.5 rounded-full text-xs ${
                   activeRequest.status === 'acknowledged'
-                    ? 'bg-emerald-100 text-emerald-800'
-                    : 'bg-amber-100 text-amber-800'
+                    ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300'
+                    : 'bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300'
                 }`}
               >
                 {activeRequest.status.toUpperCase()}
@@ -119,21 +119,21 @@ export const SOSModal: React.FC = () => {
 
             {activeRequest.assignedStaffName && (
               <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-500 font-medium">Assigned Staff:</span>
-                <span className="font-bold text-slate-800">{activeRequest.assignedStaffName}</span>
+                <span className="text-slate-500 dark:text-slate-400 font-medium">Assigned Staff:</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200">{activeRequest.assignedStaffName}</span>
               </div>
             )}
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-500 font-medium">Reported Location:</span>
-              <span className="font-semibold text-slate-800">{activeRequest.venueName || 'Main Concourse'}</span>
+              <span className="text-slate-500 dark:text-slate-400 font-medium">Reported Location:</span>
+              <span className="font-semibold text-slate-800 dark:text-slate-200">{activeRequest.venueName || 'Main Concourse'}</span>
             </div>
           </div>
 
           {/* Instructions */}
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-left text-xs text-rose-800 leading-relaxed">
+          <div className="p-4 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800/50 rounded-lg text-left text-xs text-rose-800 dark:text-rose-300 leading-relaxed">
             <strong>Stay in your current position if safe.</strong> Medical and safety staff have your coordinates. If immediate life-threatening danger exists, also call venue emergency dispatch at{' '}
-            <a href="tel:+15550192831" className="font-bold underline">
+            <a href="tel:+15550192831" className="font-semibold underline hover:no-underline">
               +1 (555) 019-2831
             </a>.
           </div>
@@ -145,23 +145,23 @@ export const SOSModal: React.FC = () => {
       ) : (
         // New SOS Submission Form
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-900 leading-relaxed">
+          <div className="p-4 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800/50 rounded-lg text-xs text-rose-800 dark:text-rose-300 leading-relaxed">
             Emergency requests are broadcast in high-priority real-time to the Event Operations Center.
           </div>
 
           {/* Emergency Type Selector */}
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">
               Select Emergency Type
             </label>
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={() => setSelectedType('medical')}
-                className={`p-3 rounded-xl border flex flex-col items-center gap-1.5 transition-all text-xs font-bold ${
+                className={`p-3 rounded-lg border flex flex-col items-center gap-1.5 transition-all text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 ${
                   selectedType === 'medical'
-                    ? 'bg-rose-50 border-rose-500 text-rose-700 ring-2 ring-rose-500/20 shadow-xs'
-                    : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                    ? 'bg-rose-50 dark:bg-rose-900/30 border-rose-500 text-rose-700 dark:text-rose-300 shadow-sm'
+                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'
                 }`}
               >
                 <HeartPulse className="w-5 h-5 text-rose-500" />
@@ -171,10 +171,10 @@ export const SOSModal: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSelectedType('security')}
-                className={`p-3 rounded-xl border flex flex-col items-center gap-1.5 transition-all text-xs font-bold ${
+                className={`p-3 rounded-lg border flex flex-col items-center gap-1.5 transition-all text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 ${
                   selectedType === 'security'
-                    ? 'bg-indigo-50 border-indigo-500 text-indigo-700 ring-2 ring-indigo-500/20 shadow-xs'
-                    : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                    ? 'bg-indigo-50 dark:bg-indigo-900/30 border-indigo-500 text-indigo-700 dark:text-indigo-300 shadow-sm'
+                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'
                 }`}
               >
                 <Shield className="w-5 h-5 text-indigo-600" />
@@ -184,10 +184,10 @@ export const SOSModal: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSelectedType('general')}
-                className={`p-3 rounded-xl border flex flex-col items-center gap-1.5 transition-all text-xs font-bold ${
+                className={`p-3 rounded-lg border flex flex-col items-center gap-1.5 transition-all text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${
                   selectedType === 'general'
-                    ? 'bg-amber-50 border-amber-500 text-amber-800 ring-2 ring-amber-500/20 shadow-xs'
-                    : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                    ? 'bg-amber-50 dark:bg-amber-900/30 border-amber-500 text-amber-800 dark:text-amber-300 shadow-sm'
+                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'
                 }`}
               >
                 <HelpCircle className="w-5 h-5 text-amber-500" />
@@ -197,28 +197,28 @@ export const SOSModal: React.FC = () => {
           </div>
 
           {/* Nearest Facility Quick References */}
-          <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5 text-xs text-slate-600">
-            <div className="font-semibold text-slate-800 flex items-center gap-1.5">
+          <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700 space-y-2 text-xs text-slate-600 dark:text-slate-300">
+            <div className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-indigo-500" />
               Nearest Fixed Safety Points:
             </div>
             {nearestFirstAid && (
               <div className="flex items-center justify-between">
                 <span>{nearestFirstAid.venue.name}</span>
-                <span className="font-medium text-slate-800">~{nearestFirstAid.distanceMeters}m away</span>
+                <span className="font-medium text-slate-800 dark:text-slate-200">~{nearestFirstAid.distanceMeters}m away</span>
               </div>
             )}
             {nearestSecurity && (
               <div className="flex items-center justify-between">
                 <span>{nearestSecurity.venue.name}</span>
-                <span className="font-medium text-slate-800">~{nearestSecurity.distanceMeters}m away</span>
+                <span className="font-medium text-slate-800 dark:text-slate-200">~{nearestSecurity.distanceMeters}m away</span>
               </div>
             )}
           </div>
 
           {/* Optional Details Input */}
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
               Brief details (Optional):
             </label>
             <textarea
@@ -227,7 +227,7 @@ export const SOSModal: React.FC = () => {
               placeholder="e.g. Person unresponsive near table 4, or lost child with red backpack"
               rows={2}
               maxLength={300}
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-500"
+              className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
             />
           </div>
 
@@ -264,14 +264,14 @@ export const SOSButton: React.FC = () => {
     <button
       onClick={() => setSosModalOpen(true)}
       aria-label="Raise emergency SOS request"
-      className={`fixed bottom-6 right-6 z-40 p-4 rounded-2xl shadow-2xl flex items-center gap-2.5 font-bold text-white transition-all transform hover:scale-105 active:scale-95 focus:outline-none focus-visible:ring-4 focus-visible:ring-rose-400 select-none ${
+      className={`fixed bottom-6 right-6 z-40 px-4 py-3 rounded-lg shadow-lg flex items-center gap-2 font-semibold text-white text-sm transition-all transform hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-rose-400/50 select-none ${
         hasPending
-          ? 'bg-rose-600 animate-bounce ring-4 ring-rose-400/50'
-          : 'bg-rose-600 hover:bg-rose-700 shadow-rose-900/30'
+          ? 'bg-rose-600 dark:bg-rose-700 animate-bounce ring-4 ring-rose-400/50'
+          : 'bg-rose-600 dark:bg-rose-700 hover:bg-rose-700 dark:hover:bg-rose-600 shadow-rose-900/30'
       }`}
     >
-      <AlertOctagon className="w-6 h-6 animate-pulse" />
-      <span className="text-sm tracking-wide uppercase font-extrabold pr-1">SOS</span>
+      <AlertOctagon className="w-5 h-5 animate-pulse" />
+      <span className="tracking-wide uppercase">SOS</span>
     </button>
   );
 };
