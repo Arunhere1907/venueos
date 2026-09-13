@@ -1,5 +1,6 @@
 /**
- * VenueOS — Top Urgency / Real-time Toast Banner
+ * VenueOS — Minimal Urgency Banner
+ * Design: thin top bar with left-colored stripe by severity
  */
 import React from 'react';
 import { AlertTriangle, Info, Volume2, X } from 'lucide-react';
@@ -8,61 +9,49 @@ import { speakText } from '../lib/speech';
 
 export const ToastBanner: React.FC = () => {
   const { activeUrgentBanner, dismissUrgentBanner } = useAnnouncementStore();
-
   if (!activeUrgentBanner) return null;
 
-  const isUrgent = activeUrgentBanner.severity === 'urgent';
-  const isWarning = activeUrgentBanner.severity === 'warning';
+  const { severity, title, body } = activeUrgentBanner;
+  const isUrgent  = severity === 'urgent';
+  const isWarning = severity === 'warning';
 
-  const handleSpeak = () => {
-    speakText(`${activeUrgentBanner.title}. ${activeUrgentBanner.body}`);
-  };
-
-  const bgStyle = isUrgent
-    ? 'bg-rose-600 text-white'
-    : isWarning
-    ? 'bg-amber-600 text-white'
-    : 'bg-indigo-600 text-white';
+  const stripe = isUrgent ? 'bg-[#dc2626]' : isWarning ? 'bg-[#b45309]' : 'bg-[#4f46e5]';
+  const iconColor = isUrgent ? 'text-[#dc2626]' : isWarning ? 'text-[#b45309]' : 'text-[#4f46e5]';
+  const labelColor = isUrgent ? 'text-[#dc2626]' : isWarning ? 'text-[#b45309]' : 'text-[#4f46e5]';
 
   return (
     <aside
       role="alert"
       aria-live="assertive"
-      className={`${bgStyle} px-4 py-3 shadow-md border-b border-black/10 transition-all duration-200 sticky top-0 z-50`}
+      className="sticky top-0 z-50 bg-white border-b border-[#e8e8e8] flex items-stretch animate-slideDown"
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3 min-w-0 flex-1">
-          <span className="p-1.5 rounded-lg bg-white/20 shrink-0">
-            {isUrgent || isWarning ? (
-              <AlertTriangle className="w-5 h-5 text-white animate-pulse" />
-            ) : (
-              <Info className="w-5 h-5 text-white" />
-            )}
-          </span>
-          <div className="min-w-0 flex-1 leading-snug">
-            <span className="font-bold mr-2 text-sm sm:text-base inline">
-              {activeUrgentBanner.title}:
-            </span>
-            <span className="text-xs sm:text-sm text-white/95 font-normal inline">
-              {activeUrgentBanner.body}
-            </span>
+      {/* Severity stripe */}
+      <div className={`w-0.5 shrink-0 ${stripe}`} />
+
+      <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+          {isUrgent || isWarning
+            ? <AlertTriangle className={`w-4 h-4 shrink-0 ${iconColor}`} />
+            : <Info className={`w-4 h-4 shrink-0 ${iconColor}`} />
+          }
+          <div className="min-w-0 flex-1 truncate text-sm">
+            <span className={`font-semibold mr-1.5 ${labelColor}`}>{title}:</span>
+            <span className="text-[#3a3a3a] font-normal">{body}</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1 shrink-0">
           <button
-            onClick={handleSpeak}
-            title="Read announcement aloud"
-            aria-label="Read announcement aloud with text to speech"
-            className="p-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            onClick={() => speakText(`${title}. ${body}`)}
+            aria-label="Read aloud"
+            className="p-1.5 text-[#9a9a9a] hover:text-[#0a0a0a] hover:bg-[#f7f7f7] rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4f46e5]"
           >
             <Volume2 className="w-4 h-4" />
           </button>
           <button
             onClick={dismissUrgentBanner}
-            title="Dismiss"
-            aria-label="Dismiss announcement banner"
-            className="p-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            aria-label="Dismiss"
+            className="p-1.5 text-[#9a9a9a] hover:text-[#0a0a0a] hover:bg-[#f7f7f7] rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4f46e5]"
           >
             <X className="w-4 h-4" />
           </button>

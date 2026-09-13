@@ -1,5 +1,6 @@
 /**
- * VenueOS — Reusable Button Component
+ * VenueOS — Minimal Button Component
+ * Design: flat, no shadows, hairline borders, single accent
  */
 import React from 'react';
 
@@ -22,37 +23,37 @@ export const Button: React.FC<ButtonProps> = ({
   disabled,
   ...props
 }) => {
-  const baseClasses =
-    'inline-flex items-center justify-center font-medium transition-all duration-150 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]';
+  const base =
+    'inline-flex items-center justify-center font-medium transition-colors duration-100 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed select-none';
 
-  const sizeClasses = {
-    sm: 'text-xs px-3 py-1.5 gap-1.5 min-h-[34px]',
-    md: 'text-sm px-4 py-2 gap-2 min-h-[42px]',
-    lg: 'text-base px-6 py-3 gap-2.5 min-h-[48px]'
+  const sizes = {
+    sm: 'text-xs px-3 py-1.5 gap-1.5 min-h-[32px]',
+    md: 'text-sm px-4 py-2   gap-2   min-h-[38px]',
+    lg: 'text-sm px-5 py-2.5 gap-2   min-h-[44px]',
   }[size];
 
-  const variantClasses = {
+  const variants = {
     primary:
-      'bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm hover:shadow focus-visible:ring-indigo-500 border border-indigo-500/20',
+      'bg-[#0a0a0a] hover:bg-[#1a1a1a] text-white border border-[#0a0a0a]',
     secondary:
-      'bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 focus-visible:ring-slate-400 border border-slate-200 dark:border-slate-700',
+      'bg-[#f7f7f7] hover:bg-[#f0f0f0] text-[#0a0a0a] border border-[#e8e8e8]',
     danger:
-      'bg-rose-600 hover:bg-rose-700 text-white shadow-sm focus-visible:ring-rose-500 border border-rose-500/20 font-semibold',
+      'bg-white hover:bg-[#fff5f5] text-[#dc2626] border border-[#dc2626]/40 hover:border-[#dc2626]/70',
     warning:
-      'bg-amber-500 hover:bg-amber-600 text-white shadow-sm focus-visible:ring-amber-400 border border-amber-500/20',
+      'bg-white hover:bg-[#fffbeb] text-[#b45309] border border-[#b45309]/40 hover:border-[#b45309]/70',
     ghost:
-      'bg-transparent hover:bg-slate-100 text-slate-700 dark:text-slate-200 dark:hover:bg-slate-800 focus-visible:ring-slate-400',
+      'bg-transparent hover:bg-[#f7f7f7] text-[#3a3a3a] border border-transparent',
     outline:
-      'bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 dark:bg-slate-900 dark:text-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 focus-visible:ring-indigo-500'
+      'bg-white hover:bg-[#f7f7f7] text-[#0a0a0a] border border-[#e8e8e8] hover:border-[#d4d4d4]',
   }[variant];
 
   return (
     <button
-      className={`${baseClasses} ${sizeClasses} ${variantClasses} ${fullWidth ? 'w-full' : ''} ${className}`}
+      className={`${base} ${sizes} ${variants} ${fullWidth ? 'w-full' : ''} ${className}`}
       disabled={disabled}
       {...props}
     >
-      {leftIcon && <span className="inline-flex shrink-0 items-center">{leftIcon}</span>}
+      {leftIcon  && <span className="inline-flex shrink-0 items-center">{leftIcon}</span>}
       <span>{children}</span>
       {rightIcon && <span className="inline-flex shrink-0 items-center">{rightIcon}</span>}
     </button>

@@ -1,7 +1,5 @@
 /**
  * VenueOS — Smart Event Experience Platform
- * Accessible venue wayfinding, session discovery, real-time crowd coordination,
- * emergency SOS response, and organizer operations.
  */
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { useAuthStore } from './stores/authStore';
@@ -9,19 +7,14 @@ import { useNavigationStore } from './stores/navigationStore';
 import { useSOSStore } from './stores/sosStore';
 import { useAttendeeStore } from './stores/attendeeStore';
 import { mockRealtimeService } from './services/mockRealtimeService';
-import {
-  AttendeeTab,
-  goHome,
-  parseHash,
-  syncHash
-} from './lib/navigation';
+import { AttendeeTab, goHome, parseHash, syncHash } from './lib/navigation';
 
-// UI Components
+// UI
 import { ToastBanner } from './components/ToastBanner';
 import { ToastNotification } from './components/ToastNotification';
 import { NotFoundPage } from './features/NotFoundPage';
 
-// Feature Modules - Attendee (eagerly loaded for main experience)
+// Attendee features
 import { VenueMap } from './features/navigation/VenueMap';
 import { MapSearch } from './features/navigation/MapSearch';
 import { RouteGuideCard } from './features/navigation/RouteGuideCard';
@@ -37,25 +30,21 @@ import { SOSModal, SOSButton } from './features/sos/SOSModal';
 import { IssueReportModal } from './features/issues/IssueReportModal';
 import { BuddyFinderModal } from './features/buddy/BuddyFinderModal';
 
-// Feature Modules - Organizer (lazy loaded to reduce initial bundle)
-const OrganizerDashboard = lazy(() => 
-  import('./features/organizer/OrganizerDashboard').then(module => ({
-    default: module.OrganizerDashboard
-  }))
+// Organizer (lazy)
+const OrganizerDashboard = lazy(() =>
+  import('./features/organizer/OrganizerDashboard').then(m => ({ default: m.OrganizerDashboard }))
 );
 
-// Icons
-import {
-  MapPin,
-  Calendar,
-  Users,
-  Radio,
-  Award,
-  Shield,
-  User,
-  Compass,
-  Share2
-} from 'lucide-react';
+import { MapPin, Calendar, Users, Radio, Award, Shield, User, Compass, Share2 } from 'lucide-react';
+
+/* ─── Tab definitions ────────────────────── */
+const ATTENDEE_TABS = [
+  { id: 'map',           label: 'Map',      labelFull: 'Wayfinding',  icon: MapPin  },
+  { id: 'schedule',      label: 'Schedule', labelFull: 'Schedule',    icon: Calendar },
+  { id: 'crowd',         label: 'Crowd',    labelFull: 'Crowd Intel', icon: Users   },
+  { id: 'announcements', label: 'Alerts',   labelFull: 'Alerts',      icon: Radio   },
+  { id: 'passport',      label: 'Passport', labelFull: 'Passport',    icon: Award   },
+] as const;
 
 export default function App() {
   const { role, setRole } = useAuthStore();
@@ -64,254 +53,210 @@ export default function App() {
   const { activeRoute } = useNavigationStore();
 
   const [attendeeTab, setAttendeeTab] = useState<AttendeeTab>('map');
-  const [buddyModalOpen, setBuddyModalOpen] = useState<boolean>(false);
-  const [is404, setIs404] = useState<boolean>(false);
+  const [buddyModalOpen, setBuddyModalOpen] = useState(false);
+  const [is404, setIs404] = useState(false);
 
   const navigateAttendee = (tab: AttendeeTab) => {
-    setIs404(false);
-    setRole('attendee');
-    setAttendeeTab(tab);
-    syncHash('attendee', tab);
+    setIs404(false); setRole('attendee'); setAttendeeTab(tab); syncHash('attendee', tab);
   };
-
   const navigateOrganizer = () => {
-    setIs404(false);
-    setRole('organizer');
-    syncHash('organizer');
+    setIs404(false); setRole('organizer'); syncHash('organizer');
   };
 
-  // Hash-based route listener with 404 detection
   useEffect(() => {
     const handleHash = () => {
       const parsed = parseHash(window.location.hash);
-
-      if (parsed.is404) {
-        setIs404(true);
-        return;
-      }
-
+      if (parsed.is404) { setIs404(true); return; }
       setIs404(false);
       if (parsed.role) setRole(parsed.role);
-      if (parsed.tab) setAttendeeTab(parsed.tab);
+      if (parsed.tab)  setAttendeeTab(parsed.tab);
     };
-
     handleHash();
-    if (!window.location.hash || window.location.hash === '#') {
-      syncHash('attendee', 'map');
-    }
+    if (!window.location.hash || window.location.hash === '#') syncHash('attendee', 'map');
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
   }, [setRole]);
 
-  // Start the background simulated events (crowd movement, polls, announcements)
   useEffect(() => {
     mockRealtimeService.start();
-    return () => {
-      mockRealtimeService.stop();
-    };
+    return () => mockRealtimeService.stop();
   }, []);
 
   const pendingSOSCount = requests.filter(r => r.status === 'pending').length;
+  const isA11y = profile.accessibilityMode;
 
   return (
-    <div
-      className={`min-h-screen overflow-x-hidden flex flex-col justify-between transition-colors duration-200 ${
-        profile.accessibilityMode
-          ? 'bg-slate-950 text-slate-100 dark contrast-more:contrast-125'
-          : 'bg-slate-50/70 text-slate-900'
-      }`}
-    >
-      {/* Real-time High Severity Toast Banner */}
+    <div className={`min-h-screen overflow-x-hidden flex flex-col ${isA11y ? 'bg-[#0a0a0a] text-white' : 'bg-[#f7f7f7] text-[#0a0a0a]'}`}>
+
+      {/* Urgency banner */}
       <ToastBanner />
 
-      {/* Primary Navigation Header */}
-      <header className="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-          {/* Logo & Brand Identity */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
-              <Compass className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white">
-                  Venue<span className="text-indigo-600 dark:text-indigo-400">OS</span>
-                </span>
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  LIVE
-                </span>
-              </div>
-              <span className="hidden sm:block text-[11px] text-slate-400 leading-none">
-                Smart Event & Accessible Wayfinding Platform
-              </span>
-            </div>
-          </div>
+      {/* ── Header ─────────────────────────────────────────────── */}
+      <header className="sticky top-0 z-40 bg-white border-b border-[#e8e8e8]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
 
-          {/* Attendee Tabs (Only shown in Attendee mode on md+ screens) */}
+          {/* Brand */}
+          <a
+            href="#"
+            onClick={e => { e.preventDefault(); navigateAttendee('map'); }}
+            className="flex items-center gap-2.5 shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4f46e5] rounded-md"
+          >
+            <div className="w-7 h-7 rounded-lg bg-[#0a0a0a] flex items-center justify-center">
+              <Compass className="w-4 h-4 text-white" />
+            </div>
+            <span className="font-semibold text-[15px] tracking-tight text-[#0a0a0a]">
+              Venue<span className="text-[#4f46e5]">OS</span>
+            </span>
+            {/* Live dot */}
+            <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-[#f0faf4] text-[#16a34a] border border-[#bbf7d0]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#16a34a] animate-pulse" />
+              Live
+            </span>
+          </a>
+
+          {/* Desktop attendee nav — underline style */}
           {role === 'attendee' && (
-            <nav className="hidden md:flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl">
-              {[
-                { id: 'map', label: 'Wayfinding', icon: MapPin },
-                { id: 'schedule', label: 'Schedule', icon: Calendar },
-                { id: 'crowd', label: 'Crowd Intel', icon: Users },
-                { id: 'announcements', label: 'Alerts', icon: Radio },
-                { id: 'passport', label: 'Passport', icon: Award }
-              ].map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => navigateAttendee(id as AttendeeTab)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-                    attendeeTab === id
-                      ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                  <span>{label}</span>
-                </button>
-              ))}
+            <nav className="hidden md:flex items-center gap-0.5" aria-label="Main navigation">
+              {ATTENDEE_TABS.map(({ id, labelFull, icon: Icon }) => {
+                const active = attendeeTab === id;
+                return (
+                  <button
+                    key={id}
+                    onClick={() => navigateAttendee(id as AttendeeTab)}
+                    className={`px-3 py-1.5 text-xs font-medium flex items-center gap-1.5 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4f46e5] ${
+                      active
+                        ? 'text-[#0a0a0a] bg-[#f7f7f7]'
+                        : 'text-[#6b6b6b] hover:text-[#0a0a0a] hover:bg-[#f7f7f7]'
+                    }`}
+                  >
+                    <Icon className={`w-3.5 h-3.5 ${active ? 'text-[#4f46e5]' : ''}`} />
+                    {labelFull}
+                    {active && <span className="sr-only">(current)</span>}
+                  </button>
+                );
+              })}
             </nav>
           )}
 
-          {/* Right Header Actions */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Buddy Finder quick button (Attendee only) */}
+          {/* Right actions */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Buddy */}
             {role === 'attendee' && (
               <button
                 onClick={() => setBuddyModalOpen(true)}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 transition-colors"
-                title="Share venue position with a friend"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-[#3a3a3a] border border-[#e8e8e8] hover:border-[#d4d4d4] hover:bg-[#f7f7f7] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4f46e5]"
               >
-                <Share2 className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                <span>{profile.connectedBuddy ? 'Buddy Active' : 'Buddy'}</span>
+                <Share2 className="w-3.5 h-3.5" />
+                {profile.connectedBuddy ? 'Buddy ●' : 'Buddy'}
               </button>
             )}
 
-            {/* Role Switcher Pill (Attendee vs Organizer) */}
-            <div className="bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl flex items-center border border-slate-200 dark:border-slate-700">
+            {/* Role switcher — two text buttons separated by a slash */}
+            <div className="flex items-center text-xs font-medium">
               <button
                 onClick={() => navigateAttendee(attendeeTab)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-l-lg border border-r-0 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4f46e5] ${
                   role === 'attendee'
-                    ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-[#0a0a0a] text-white border-[#0a0a0a]'
+                    : 'bg-white text-[#6b6b6b] border-[#e8e8e8] hover:bg-[#f7f7f7]'
                 }`}
               >
                 <User className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Attendee</span>
               </button>
-
               <button
-                onClick={() => navigateOrganizer()}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 relative ${
+                onClick={navigateOrganizer}
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-r-lg border relative transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4f46e5] ${
                   role === 'organizer'
-                    ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-[#0a0a0a] text-white border-[#0a0a0a]'
+                    : 'bg-white text-[#6b6b6b] border-[#e8e8e8] hover:bg-[#f7f7f7]'
                 }`}
               >
-                <Shield className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" />
+                <Shield className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Organizer</span>
                 {pendingSOSCount > 0 && (
-                  <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping absolute -top-0.5 -right-0.5" />
+                  <span className="w-2 h-2 rounded-full bg-[#dc2626] animate-ping absolute -top-1 -right-1" />
                 )}
               </button>
             </div>
           </div>
         </div>
 
-        {/* Mobile Sub-Navigation Bar for Attendee Mode */}
+        {/* Mobile tab bar */}
         {role === 'attendee' && (
-          <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-2 py-1.5 flex items-center justify-around overflow-x-auto">
-            {[
-              { id: 'map', label: 'Map', icon: MapPin },
-              { id: 'schedule', label: 'Schedule', icon: Calendar },
-              { id: 'crowd', label: 'Crowd', icon: Users },
-              { id: 'announcements', label: 'Alerts', icon: Radio },
-              { id: 'passport', label: 'Passport', icon: Award }
-            ].map(({ id, label, icon: Icon }) => (
-              <button
-                key={id}
-                onClick={() => navigateAttendee(id as AttendeeTab)}
-                className={`flex flex-col items-center py-1 px-3 rounded-xl text-[11px] font-bold ${
-                  attendeeTab === id
-                    ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/40'
-                    : 'text-slate-500'
-                }`}
-              >
-                <Icon className="w-4 h-4 mb-0.5" />
-                <span>{label}</span>
-              </button>
-            ))}
+          <div className="md:hidden border-t border-[#e8e8e8] bg-white px-2 py-1 flex items-center justify-around overflow-x-auto scrollbar-none">
+            {ATTENDEE_TABS.map(({ id, label, icon: Icon }) => {
+              const active = attendeeTab === id;
+              return (
+                <button
+                  key={id}
+                  onClick={() => navigateAttendee(id as AttendeeTab)}
+                  className={`flex flex-col items-center py-1 px-3 gap-0.5 text-[10px] font-medium rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4f46e5] ${
+                    active ? 'text-[#4f46e5]' : 'text-[#9a9a9a]'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {label}
+                </button>
+              );
+            })}
           </div>
         )}
       </header>
 
-      {/* Main App Container */}
-      <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 flex-1 w-full">
+      {/* ── Main ───────────────────────────────────────────────── */}
+      <main
+        id="main-content"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5 flex-1 w-full"
+      >
         {is404 ? (
-          <NotFoundPage
-            onGoHome={() => goHome()}
-            onNavigate={(tab) => navigateAttendee(tab)}
-          />
+          <NotFoundPage onGoHome={goHome} onNavigate={navigateAttendee} />
         ) : (
           <>
-            {/* Attendee Experience */}
             {role === 'attendee' && (
-              <div className="space-y-6">
-                {/* Global Accessibility Bar */}
+              <div className="space-y-5">
                 <AccessibilityBar />
 
-                {/* View: Map & Interactive Wayfinding */}
                 {attendeeTab === 'map' && (
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                    {/* Left Controls & Search (4 columns on lg) */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
                     <div className="lg:col-span-4 space-y-4">
                       <MapSearch />
                       <VenueDetailDrawer />
                       {Boolean(activeRoute) && <RouteGuideCard />}
                       <LivePollCard />
                     </div>
-
-                    {/* Right Interactive Map Canvas (8 columns on lg) */}
-                    <div className="lg:col-span-8 space-y-4">
+                    <div className="lg:col-span-8">
                       <VenueMap />
                     </div>
                   </div>
                 )}
 
-                {/* View: Schedule Discovery */}
                 {attendeeTab === 'schedule' && (
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
                     <div className="lg:col-span-8">
                       <ScheduleDiscovery onNavigateToVenue={() => navigateAttendee('map')} />
                     </div>
-                    <div className="lg:col-span-4 space-y-4">
+                    <div className="lg:col-span-4">
                       <LivePollCard />
                     </div>
                   </div>
                 )}
 
-                {/* View: Crowd Intelligence */}
                 {attendeeTab === 'crowd' && (
                   <CrowdCoordination onNavigateToVenue={() => navigateAttendee('map')} />
                 )}
 
-                {/* View: Announcements & Live Updates */}
                 {attendeeTab === 'announcements' && <AnnouncementsFeed />}
-
-                {/* View: Event Passport Stamps */}
-                {attendeeTab === 'passport' && <EventPassport />}
+                {attendeeTab === 'passport'      && <EventPassport />}
               </div>
             )}
 
-            {/* Organizer Command Center */}
             {role === 'organizer' && (
               <Suspense fallback={
-                <div className="flex items-center justify-center py-20">
+                <div className="flex items-center justify-center py-24">
                   <div className="text-center space-y-3">
-                    <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto" />
-                    <p className="text-sm text-slate-500">Loading Organizer Dashboard...</p>
+                    <div className="w-8 h-8 border-2 border-[#0a0a0a] border-t-transparent rounded-full animate-spin mx-auto" />
+                    <p className="text-sm text-[#6b6b6b]">Loading…</p>
                   </div>
                 </div>
               }>
@@ -322,97 +267,87 @@ export default function App() {
         )}
       </main>
 
-      {/* Global Application Footer */}
-      <footer className="mt-12 border-t border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* ── Footer ─────────────────────────────────────────────── */}
+      <footer className="mt-16 border-t border-[#e8e8e8] bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+
+            {/* Brand blurb */}
             <div className="space-y-3 md:col-span-2">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white">
-                  <Compass className="w-4 h-4" />
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-md bg-[#0a0a0a] flex items-center justify-center">
+                  <Compass className="w-3.5 h-3.5 text-white" />
                 </div>
-                <span className="font-extrabold text-lg text-slate-900 dark:text-white">
-                  Venue<span className="text-indigo-600 dark:text-indigo-400">OS</span>
+                <span className="font-semibold text-sm text-[#0a0a0a]">
+                  Venue<span className="text-[#4f46e5]">OS</span>
                 </span>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-sm">
-                Smart Event Experience & Universal Wayfinding platform. Providing step-free routes, live crowd telemetry, session discovery, and emergency operations dispatch.
+              <p className="text-xs text-[#6b6b6b] leading-relaxed max-w-xs">
+                Smart Event Experience & Universal Wayfinding platform — step-free routes, live crowd telemetry, session discovery, emergency dispatch.
               </p>
             </div>
 
-            <div className="space-y-2">
-              <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                Event Navigation
-              </h4>
-              <ul className="space-y-1.5 text-xs text-slate-500 dark:text-slate-400">
-                <li>
-                  <button onClick={() => navigateAttendee('map')} className="hover:text-indigo-600 transition-colors">
-                    Interactive Venue Map
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => navigateAttendee('schedule')} className="hover:text-indigo-600 transition-colors">
-                    Schedule & Live Polls
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => navigateAttendee('crowd')} className="hover:text-indigo-600 transition-colors">
-                    Crowd Density Telemetry
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => navigateAttendee('passport')} className="hover:text-indigo-600 transition-colors">
-                    Summit Passport & Stamps
-                  </button>
-                </li>
+            {/* Navigation links */}
+            <div className="space-y-2.5">
+              <p className="text-[11px] font-semibold text-[#0a0a0a] uppercase tracking-wider">Navigation</p>
+              <ul className="space-y-1.5 text-xs text-[#6b6b6b]">
+                {[
+                  ['map',           'Venue Map'],
+                  ['schedule',      'Schedule'],
+                  ['crowd',         'Crowd Intel'],
+                  ['passport',      'Event Passport'],
+                ].map(([tab, label]) => (
+                  <li key={tab}>
+                    <button
+                      onClick={() => navigateAttendee(tab as AttendeeTab)}
+                      className="hover:text-[#4f46e5] transition-colors focus:outline-none focus-visible:underline"
+                    >
+                      {label}
+                    </button>
+                  </li>
+                ))}
               </ul>
             </div>
 
-            <div className="space-y-2">
-              <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                Safety & Accessibility
-              </h4>
-              <ul className="space-y-1.5 text-xs text-slate-500 dark:text-slate-400">
+            {/* Safety */}
+            <div className="space-y-2.5">
+              <p className="text-[11px] font-semibold text-[#0a0a0a] uppercase tracking-wider">Safety</p>
+              <ul className="space-y-1.5 text-xs text-[#6b6b6b]">
                 <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                  <span>ADA Step-Free Accessible</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#16a34a] shrink-0" />
+                  ADA Step-Free Accessible
                 </li>
                 <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
-                  <span>24/7 Rapid SOS Dispatch</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#dc2626] shrink-0" />
+                  24/7 Rapid SOS Dispatch
                 </li>
                 <li className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
-                  <span>Assistive Speech Synthesis</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#4f46e5] shrink-0" />
+                  Assistive Speech Synthesis
                 </li>
               </ul>
             </div>
           </div>
 
-          <div className="pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
-            <p>&copy; {new Date().getFullYear()} VenueOS. All rights reserved.</p>
-            <div className="flex items-center gap-4">
-              <span className="inline-flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                Operations Active
-              </span>
-            </div>
+          <div className="pt-6 border-t border-[#f0f0f0] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#9a9a9a]">
+            <span>© {new Date().getFullYear()} VenueOS. All rights reserved.</span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#16a34a] animate-pulse" />
+              Operations active
+            </span>
           </div>
         </div>
       </footer>
 
-      {/* Global Drawers & Modals */}
+      {/* Modals */}
       <SOSModal />
       <IssueReportModal />
-      <BuddyFinderModal
-        isOpen={buddyModalOpen}
-        onClose={() => setBuddyModalOpen(false)}
-      />
+      <BuddyFinderModal isOpen={buddyModalOpen} onClose={() => setBuddyModalOpen(false)} />
 
-      {/* Global Toast Notification Stack */}
+      {/* Toast stack */}
       <ToastNotification />
 
-      {/* Persistent Floating Emergency SOS Button & AI Concierge (Attendee view only) */}
+      {/* Floating attendee buttons */}
       {role === 'attendee' && !is404 && (
         <>
           <AIConciergeChat onNavigateToVenue={() => navigateAttendee('map')} />
@@ -422,4 +357,3 @@ export default function App() {
     </div>
   );
 }
-

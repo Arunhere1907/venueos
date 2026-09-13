@@ -1,11 +1,13 @@
 /**
- * VenueOS — Reusable Badge & Card Components
+ * VenueOS — Minimal Card & Badge Components
+ * Design: white background, single hairline border, no shadow
  */
 import React from 'react';
 
+/* ─── Badge ──────────────────────────────────────────────── */
 export interface BadgeProps {
   children: React.ReactNode;
-  variant?: 'neutral' | 'success' | 'warning' | 'danger' | 'info' | 'purple';
+  variant?: 'neutral' | 'success' | 'warning' | 'danger' | 'info' | 'accent';
   size?: 'sm' | 'md';
   dot?: boolean;
   className?: string;
@@ -16,38 +18,41 @@ export const Badge: React.FC<BadgeProps> = ({
   variant = 'neutral',
   size = 'md',
   dot = false,
-  className = ''
+  className = '',
 }) => {
-  const sizeClasses = size === 'sm' ? 'text-[11px] px-2 py-0.5' : 'text-xs px-2.5 py-1';
+  const sizeClass = size === 'sm'
+    ? 'text-[10px] px-1.5 py-0.5'
+    : 'text-[11px] px-2 py-0.5';
 
-  const variantClasses = {
-    neutral: 'bg-slate-100 text-slate-700 border-slate-200',
-    success: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    warning: 'bg-amber-50 text-amber-800 border-amber-200',
-    danger: 'bg-rose-50 text-rose-700 border-rose-200',
-    info: 'bg-sky-50 text-sky-700 border-sky-200',
-    purple: 'bg-indigo-50 text-indigo-700 border-indigo-200'
-  }[variant];
+  const styles: Record<string, string> = {
+    neutral: 'bg-[#f0f0f0] text-[#3a3a3a] border-[#e8e8e8]',
+    success: 'bg-[#f0faf4] text-[#16a34a] border-[#bbf7d0]',
+    warning: 'bg-[#fffbeb] text-[#b45309] border-[#fde68a]',
+    danger:  'bg-[#fff5f5] text-[#dc2626] border-[#fecaca]',
+    info:    'bg-[#f0f9ff] text-[#0369a1] border-[#bae6fd]',
+    accent:  'bg-[#f0f0ff] text-[#4f46e5] border-[#c7d2fe]',
+  };
 
-  const dotColor = {
-    neutral: 'bg-slate-400',
-    success: 'bg-emerald-500',
-    warning: 'bg-amber-500',
-    danger: 'bg-rose-500',
-    info: 'bg-sky-500',
-    purple: 'bg-indigo-500'
-  }[variant];
+  const dotColors: Record<string, string> = {
+    neutral: 'bg-[#9a9a9a]',
+    success: 'bg-[#16a34a]',
+    warning: 'bg-[#b45309]',
+    danger:  'bg-[#dc2626]',
+    info:    'bg-[#0369a1]',
+    accent:  'bg-[#4f46e5]',
+  };
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 font-medium rounded-full border whitespace-nowrap ${sizeClasses} ${variantClasses} ${className}`}
+      className={`inline-flex items-center gap-1 font-medium rounded-md border whitespace-nowrap ${sizeClass} ${styles[variant]} ${className}`}
     >
-      {dot && <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />}
+      {dot && <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColors[variant]}`} />}
       {children}
     </span>
   );
 };
 
+/* ─── Card ───────────────────────────────────────────────── */
 export interface CardProps {
   children: React.ReactNode;
   className?: string;
@@ -63,25 +68,27 @@ export const Card: React.FC<CardProps> = ({
   onClick,
   hoverable = false,
   selected = false,
-  padding = 'md'
+  padding = 'md',
 }) => {
-  const paddingClass = {
+  const pad = {
     none: 'p-0',
-    sm: 'p-3',
-    md: 'p-4 sm:p-5',
-    lg: 'p-6 sm:p-8'
+    sm:   'p-3',
+    md:   'p-4 sm:p-5',
+    lg:   'p-5 sm:p-6',
   }[padding];
 
-  const interactiveClasses = onClick || hoverable
-    ? 'cursor-pointer hover:border-indigo-300 hover:shadow-md transition-all duration-150'
+  const interactive = (onClick || hoverable)
+    ? 'cursor-pointer hover:border-[#d4d4d4] transition-colors duration-100'
     : '';
 
-  const selectedClass = selected ? 'border-indigo-500 ring-2 ring-indigo-500/20 shadow-sm' : 'border-slate-200';
+  const border = selected
+    ? 'border-[#4f46e5]'
+    : 'border-[#e8e8e8]';
 
   return (
     <div
       onClick={onClick}
-      className={`bg-white rounded-2xl border ${selectedClass} shadow-xs ${paddingClass} ${interactiveClasses} ${className}`}
+      className={`bg-white rounded-xl border ${border} ${pad} ${interactive} ${className}`}
     >
       {children}
     </div>
